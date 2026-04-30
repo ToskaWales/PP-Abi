@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PP 2026 – FOS Bayern Sozialwesen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --white: #FFFFFF;
+  --border: #E8E6E0;
+  --text: #1C1C1A;
+  --muted: #7A7A70;
+  --accent: #2563EB;      /* blue */
+  --accent-bg: #EFF6FF;
+  --green: #16A34A;
+  --green-bg: #F0FDF4;
+  --amber: #D97706;
+  --amber-bg: #FFFBEB;
+  --red: #DC2626;
+  --red-bg: #FEF2F2;
+  --purple: #7C3AED;
+  --purple-bg: #F5F3FF;
+  --teal: #0D9488;
+  --teal-bg: #F0FDFA;
+
+/* Class color mapping */
+–c11: #2563EB;   –c11-bg: #EFF6FF;   /* Klasse 11 = blau */
+–c12: #7C3AED;   –c12-bg: #F5F3FF;   /* Klasse 12 = lila */
+–font: ‘Atkinson Hyperlegible’, sans-serif;
+–radius: 12px;
+–shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+font-family: var(–font);
+background: var(–bg);
+color: var(–text);
+font-size: 16px;
+line-height: 1.6;
+min-height: 100vh;
+}
+
+/* ══════════════════════ HEADER ══════════════════════ */
+header {
+background: var(–white);
+border-bottom: 2px solid var(–border);
+padding: 12px 16px;
+position: sticky; top: 0; z-index: 200;
+display: flex; align-items: center; justify-content: space-between;
+}
+.logo { font-size: 1.05rem; font-weight: 700; color: var(–text); letter-spacing: -0.3px; }
+.logo span { color: var(–accent); }
+.hbadges { display: flex; gap: 6px; }
+.hbadge { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+.hbadge.b { background: var(–accent-bg); color: var(–accent); }
+.hbadge.g { background: var(–green-bg); color: var(–green); }
+
+/* ══════════════════════ TAB BAR ══════════════════════ */
+.tabbar {
+background: var(–white);
+border-bottom: 2px solid var(–border);
+display: flex; padding: 0 12px;
+overflow-x: auto; scrollbar-width: none;
+}
+.tabbar::-webkit-scrollbar { display: none; }
+.tb { flex-shrink: 0; padding: 11px 10px; background: none; border: none; border-bottom: 3px solid transparent; margin-bottom: -2px; font-family: var(–font); font-size: 0.82rem; font-weight: 700; color: var(–muted); cursor: pointer; white-space: nowrap; transition: all .15s; }
+.tb.active { color: var(–accent); border-bottom-color: var(–accent); }
+
+/* ══════════════════════ MAIN ══════════════════════ */
+main { padding: 14px 14px 90px; max-width: 720px; margin: 0 auto; }
+
+/* ══════════════════════ TOPIC LIST ══════════════════════ */
+.class-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(–muted); margin: 14px 0 6px; }
+.tlist { display: flex; flex-direction: column; gap: 6px; }
+.titem {
+background: var(–white); border: 2px solid var(–border); border-radius: var(–radius);
+padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 11px;
+width: 100%; text-align: left; transition: border-color .12s; box-shadow: var(–shadow);
+}
+.titem:hover { border-color: var(–accent); }
+.titem.done { border-color: var(–green); background: var(–green-bg); }
+.tnum {
+width: 32px; height: 32px; min-width: 32px; border-radius: 8px;
+display: flex; align-items: center; justify-content: center;
+font-weight: 700; font-size: 0.72rem;
+}
+.tnum.c11 { background: var(–c11-bg); color: var(–c11); }
+.tnum.c12 { background: var(–c12-bg); color: var(–c12); }
+.tnum.done { background: var(–green-bg); color: var(–green); }
+.ttxt { flex: 1; min-width: 0; }
+.ttitle { font-size: 0.9rem; font-weight: 700; }
+.tsub { font-size: 0.73rem; color: var(–muted); margin-top: 1px; }
+.tarr { color: var(–muted); font-size: 1.1rem; flex-shrink: 0; }
+.titem.done .tarr { color: var(–green); }
+
+/* ══════════════════════ DETAIL ══════════════════════ */
+#detailView { display: none; }
+.backbtn {
+display: inline-flex; align-items: center; gap: 5px;
+background: var(–white); border: 2px solid var(–border); border-radius: 9px;
+padding: 7px 14px; font-family: var(–font); font-size: 0.82rem; font-weight: 700;
+color: var(–text); cursor: pointer; margin-bottom: 13px;
+}
+.backbtn:hover { border-color: var(–accent); color: var(–accent); }
+
+/* CARD */
+.card {
+background: var(–white); border: 2px solid var(–border); border-radius: var(–radius);
+padding: 16px; margin-bottom: 9px; box-shadow: var(–shadow);
+}
+.card-head {
+font-size: 1.05rem; font-weight: 700; margin-bottom: 12px;
+padding-bottom: 10px; border-bottom: 2px solid var(–border);
+}
+.slabel { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .9px; color: var(–muted); margin: 12px 0 4px; }
+.card p { font-size: 0.88rem; margin-bottom: 6px; }
+.card ul { padding-left: 16px; margin-bottom: 6px; }
+.card li { font-size: 0.88rem; margin-bottom: 3px; }
+.card strong { color: var(–accent); font-weight: 700; }
+
+/* BOX */
+.box { border-radius: 9px; padding: 10px 13px; margin: 7px 0; font-size: 0.85rem; font-weight: 700; line-height: 1.5; border-left: 4px solid; }
+.box.blue   { background: var(–accent-bg); color: var(–accent);  border-color: var(–accent); }
+.box.green  { background: var(–green-bg);  color: var(–green);   border-color: var(–green); }
+.box.amber  { background: var(–amber-bg);  color: var(–amber);   border-color: var(–amber); }
+.box.red    { background: var(–red-bg);    color: var(–red);     border-color: var(–red); }
+.box.purple { background: var(–purple-bg); color: var(–purple);  border-color: var(–purple); }
+.box.teal   { background: var(–teal-bg);   color: var(–teal);    border-color: var(–teal); }
+.box.gray   { background: var(–bg);        color: var(–muted);   border-color: var(–border); font-weight: 400; }
+
+/* TABLE */
+.tbl { width: 100%; border-collapse: collapse; margin: 7px 0; font-size: 0.82rem; border: 2px solid var(–border); border-radius: 9px; overflow: hidden; }
+.tbl th { background: var(–accent-bg); color: var(–accent); padding: 7px 10px; text-align: left; font-weight: 700; font-size: 0.75rem; }
+.tbl td { padding: 7px 10px; border-top: 1px solid var(–border); vertical-align: top; }
+.tbl tr:nth-child(even) td { background: #FAFBFF; }
+
+/* CHIPS */
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 5px 0; }
+.chip { font-weight: 700; font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; }
+.chip.b { background: var(–accent-bg); color: var(–accent); }
+.chip.g { background: var(–green-bg);  color: var(–green); }
+.chip.a { background: var(–amber-bg);  color: var(–amber); }
+.chip.p { background: var(–purple-bg); color: var(–purple); }
+.chip.t { background: var(–teal-bg);   color: var(–teal); }
+
+/* TOGGLE */
+.dtoggle {
+width: 100%; padding: 10px 14px; background: var(–purple-bg); border: 2px solid #DDD6FE;
+border-radius: var(–radius); color: var(–purple); font-family: var(–font); font-size: 0.85rem;
+font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 9px;
+}
+.dtoggle .arr { transition: transform .2s; }
+.dtoggle.open .arr { transform: rotate(180deg); }
+.dsection { display: none; }
+.dsection.open { display: block; }
+
+/* DONE BUTTON */
+.donebtn {
+width: 100%; padding: 13px; background: var(–accent); color: #fff;
+font-family: var(–font); font-size: 0.92rem; font-weight: 700;
+border: none; border-radius: var(–radius); cursor: pointer; margin-top: 2px;
+}
+.donebtn.done { background: var(–green); }
+
+/* ══════════════════════ QUIZ ══════════════════════ */
+.qsetup-card { background: var(–white); border: 2px solid var(–border); border-radius: var(–radius); padding: 16px; box-shadow: var(–shadow); }
+.qsetup-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+.modebar { display: flex; gap: 7px; margin-bottom: 12px; }
+.modebtn { flex: 1; padding: 9px 6px; border: 2px solid var(–border); border-radius: 9px; background: var(–white); font-family: var(–font); font-size: 0.78rem; font-weight: 700; color: var(–muted); cursor: pointer; transition: all .12s; }
+.modebtn.active { border-color: var(–accent); background: var(–accent-bg); color: var(–accent); }
+.tgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.tgall { grid-column: 1/-1; padding: 9px; border: 2px solid var(–border); border-radius: 9px; background: var(–white); font-family: var(–font); font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+.tgall.active { border-color: var(–accent); background: var(–accent); color: #fff; }
+.tgbtn { padding: 8px 9px; border: 2px solid var(–border); border-radius: 9px; background: var(–white); font-family: var(–font); font-size: 0.73rem; font-weight: 700; color: var(–text); text-align: left; cursor: pointer; transition: all .12s; line-height: 1.3; }
+.tgbtn.active { border-color: var(–accent); background: var(–accent-bg); color: var(–accent); }
+.startbtn { width: 100%; padding: 13px; background: var(–accent); color: #fff; font-family: var(–font); font-size: 0.9rem; font-weight: 700; border: none; border-radius: var(–radius); cursor: pointer; margin-top: 4px; }
+
+/* QUIZ RUN */
+.qwrap { display: flex; flex-direction: column; gap: 9px; }
+.qbar { height: 5px; background: var(–border); border-radius: 5px; }
+.qfill { height: 100%; background: var(–accent); border-radius: 5px; transition: width .3s; }
+.qmeta { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(–muted); font-weight: 700; margin-top: 2px; }
+.qcard { background: var(–white); border: 2px solid var(–border); border-radius: var(–radius); padding: 16px; box-shadow: var(–shadow); }
+.qtag { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; margin-bottom: 8px; }
+.qtag.c11 { color: var(–c11); }
+.qtag.c12 { color: var(–c12); }
+.qtext { font-size: 0.95rem; font-weight: 700; margin-bottom: 13px; line-height: 1.5; }
+
+/* MC */
+.qopts { display: flex; flex-direction: column; gap: 6px; }
+.qopt {
+background: var(–bg); border: 2px solid var(–border); border-radius: 9px;
+padding: 10px 13px; font-family: var(–font); font-size: 0.88rem; font-weight: 700;
+color: var(–text); text-align: left; cursor: pointer; transition: all .12s;
+}
+.qopt:hover:not(:disabled) { border-color: var(–accent); background: var(–accent-bg); color: var(–accent); }
+.qopt.correct { border-color: var(–green); background: var(–green-bg); color: var(–green); }
+.qopt.wrong   { border-color: var(–red);   background: var(–red-bg);   color: var(–red); }
+.qopt:disabled { cursor: default; }
+
+/* INPUT */
+.qinput { width: 100%; padding: 10px 13px; border: 2px solid var(–border); border-radius: 9px; font-family: var(–font); font-size: 0.88rem; font-weight: 400; color: var(–text); background: var(–bg); resize: vertical; min-height: 75px; }
+.qinput:focus { outline: none; border-color: var(–accent); }
+.qsubmit { width: 100%; padding: 11px; background: var(–accent); color: #fff; font-family: var(–font); font-size: 0.88rem; font-weight: 700; border: none; border-radius: 9px; cursor: pointer; margin-top: 6px; }
+.qreveal { display: none; margin-top: 9px; padding: 12px 13px; border-radius: 9px; background: var(–accent-bg); border: 2px solid var(–accent); font-size: 0.85rem; line-height: 1.5; }
+.qreveal.show { display: block; }
+.qreveal strong { color: var(–accent); }
+.selfgrade { display: none; gap: 6px; margin-top: 7px; }
+.selfgrade.show { display: flex; }
+.sgbtn { flex: 1; padding: 10px; border: 2px solid var(–border); border-radius: 9px; font-family: var(–font); font-size: 0.82rem; font-weight: 700; cursor: pointer; }
+.sgbtn.y { background: var(–green-bg); border-color: var(–green); color: var(–green); }
+.sgbtn.h { background: var(–amber-bg); border-color: var(–amber); color: var(–amber); }
+.sgbtn.n { background: var(–red-bg);   border-color: var(–red);   color: var(–red); }
+
+.qfb { display: none; margin-top: 8px; padding: 10px 13px; border-radius: 9px; font-size: 0.85rem; font-weight: 700; line-height: 1.45; }
+.qfb.show { display: block; }
+.qfb.ok  { background: var(–green-bg); color: var(–green); }
+.qfb.bad { background: var(–red-bg);   color: var(–red); }
+.qfb.half{ background: var(–amber-bg); color: var(–amber); }
+.qnext { display: none; width: 100%; padding: 11px; background: var(–accent); color: #fff; font-family: var(–font); font-size: 0.88rem; font-weight: 700; border: none; border-radius: 9px; cursor: pointer; margin-top: 8px; }
+.qnext.show { display: block; }
+.qdone { text-align: center; padding: 28px 16px; }
+.qdone-score { font-size: 2.8rem; font-weight: 700; color: var(–accent); }
+.qdone-label { font-size: 0.88rem; color: var(–muted); margin: 6px 0 16px; }
+.qactions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.qaction { padding: 11px 22px; border: 2px solid var(–border); border-radius: 9px; font-family: var(–font); font-size: 0.85rem; font-weight: 700; cursor: pointer; background: var(–white); }
+.qaction.primary { background: var(–accent); color: #fff; border-color: var(–accent); }
+
+/* ══════════════════════ AUFSATZ ══════════════════════ */
+.astep {
+background: var(–white); border: 2px solid var(–border); border-radius: var(–radius);
+padding: 13px; margin-bottom: 7px; display: flex; gap: 11px; align-items: flex-start;
+box-shadow: var(–shadow);
+}
+.asnum { min-width: 34px; height: 34px; background: var(–accent); color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+.asbody h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 3px; }
+.asbody p  { font-size: 0.82rem; color: var(–muted); line-height: 1.45; }
+
+/* ══════════════════════ BOTTOM NAV ══════════════════════ */
+.bnav {
+position: fixed; bottom: 0; left: 0; right: 0;
+background: var(–white); border-top: 2px solid var(–border);
+display: flex; padding: 7px 12px 18px; gap: 3px; z-index: 200;
+}
+.nbtn {
+flex: 1; background: none; border: none; font-family: var(–font);
+font-size: 0.68rem; font-weight: 700; color: var(–muted); cursor: pointer;
+padding: 5px 3px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.nbtn .ni { font-size: 1.25rem; }
+.nbtn.active { color: var(–accent); background: var(–accent-bg); }
+
+@keyframes up { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.up { animation: up .2s ease; }
+</style>
+
+</head>
+<body>
+
+<header>
+  <div class="logo">PP <span>2026</span> · FOS Bayern</div>
+  <div class="hbadges">
+    <div class="hbadge b">✓ <span id="doneCount">0</span>/<span id="totalCount">0</span></div>
+    <div class="hbadge g">⭐ <span id="ptsEl">0</span></div>
+  </div>
+</header>
+
+<div class="tabbar" id="tabbar">
+  <button class="tb active" onclick="showTab('lernen',0)">📚 Lernen</button>
+  <button class="tb" onclick="showTab('quiz',1)">🧠 Quiz</button>
+  <button class="tb" onclick="showTab('aufsatz',2)">✍️ Aufsatz</button>
+</div>
+
+<main>
+  <!-- LERNEN -->
+  <div id="lernenTab">
+    <div id="listView"></div>
+    <div id="detailView"></div>
+  </div>
+  <!-- QUIZ -->
+  <div id="quizTab" style="display:none">
+    <div id="qsetup"></div>
+    <div id="qrun" style="display:none">
+      <div class="qwrap">
+        <div class="qbar"><div class="qfill" id="qfill" style="width:0%"></div></div>
+        <div class="qmeta"><span id="qctr"></span><span id="qpts"></span></div>
+        <div class="qcard" id="qcard"></div>
+      </div>
+    </div>
+  </div>
+  <!-- AUFSATZ -->
+  <div id="aufsatzTab" style="display:none"></div>
+</main>
+
+<div class="bnav">
+  <button class="nbtn active" onclick="showTab('lernen',0)"><span class="ni">📚</span>Lernen</button>
+  <button class="nbtn" onclick="showTab('quiz',1)"><span class="ni">🧠</span>Quiz</button>
+  <button class="nbtn" onclick="showTab('aufsatz',2)"><span class="ni">✍️</span>Aufsatz</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+let done = JSON.parse(localStorage.getItem('pp26_done')||'[]');
+let pts  = parseInt(localStorage.getItem('pp26_pts')||'0');
+let qMode = 'def', selTids = [], activeQ = [], qIdx = 0, qAnswered = false;
+
+function save(){ localStorage.setItem('pp26_done',JSON.stringify(done)); localStorage.setItem('pp26_pts',pts); }
+function updH(){
+  document.getElementById('doneCount').textContent=done.length;
+  document.getElementById('totalCount').textContent=topics.length;
+  document.getElementById('ptsEl').textContent=pts+' Pkt';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TOPICS  –  vollständig nach LehrplanPLUS FOS Bayern (11+12)
+// cls: '11' or '12'
+// ═══════════════════════════════════════════════════════════════════
+const topics = [
+
+// ──────────────────────────────────────
+// KLASSE 11 – LB 1: Wissenschaft & Grundlagen
+// ──────────────────────────────────────
+{id:'w01', cls:'11', num:'01', title:'Wissenschaft vs. Alltagstheorie', sub:'Grundlagen der PP',
+ov:`<div class="slabel">Was ist der Unterschied?</div>
+<table class="tbl"><tr><th></th><th>Alltagstheorie</th><th>Wiss. Theorie</th></tr>
+<tr><td>Herkunft</td><td>Erfahrung, Intuition</td><td>Systematische Forschung</td></tr>
+<tr><td>Geprüft?</td><td>Nein</td><td>Ja – falsifizierbar</td></tr>
+<tr><td>Ziel</td><td>Orientierung</td><td>Erklären + Vorhersagen</td></tr></table>
+<div class="box blue">🧠 Falsifizierbar = widerlegbar – das ist das Kernmerkmal von Wissenschaft</div>
+<div class="slabel">Gegenstand der PP</div>
+<p><strong>Psychologie:</strong> Erleben, Verhalten, Handeln</p>
+<p><strong>Pädagogik:</strong> Erziehungspraxis und Erziehungstheorie</p>`,
+dt:`<div class="slabel">Merkmale wissenschaftlicher Aussagen</div>
+<div class="chips"><span class="chip b">Allgemeingültig</span><span class="chip b">Überprüfbar</span><span class="chip b">Objektiv</span><span class="chip b">Systematisch</span><span class="chip b">Widerlegbar</span></div>
+<div class="slabel">Wissenschaftliche Beschreibung vs. Erklärung</div>
+<p><strong>Beschreibung:</strong> Was passiert? (z.B. „Das Kind weint.")</p>
+<p><strong>Erklärung:</strong> Warum passiert es? (z.B. „Das Kind weint, weil…")</p>
+<div class="slabel">Alltagstheorie – typische Fehler</div>
+<ul><li>Subjektiv und verallgemeinernd</li><li>Bestätigungsfehler: Wir suchen nur Belege für das, was wir schon glauben</li><li>Widersprüche werden ignoriert</li></ul>
+<div class="box amber">💡 Im Abi: Beide definieren + an Beispiel aus dem Sozialbereich unterscheiden!</div>`},
+
+// ──────────────────────────────────────
+// KLASSE 11 – LB 2: Erleben, Verhalten, Handeln
+// ──────────────────────────────────────
+{id:'w02', cls:'11', num:'02', title:'Wahrnehmung', sub:'Zimbardo-Modell + Einflussfaktoren',
+ov:`<div class="slabel">Dreistufiges Modell nach Zimbardo</div>
+<div class="box blue">1. Empfangen → 2. Auswählen (Selektion) → 3. Organisieren & Interpretieren</div>
+<p>Wahrnehmung = <strong>aktiver Konstruktionsprozess</strong> – nie objektiv!</p>
+<div class="slabel">Einflussfaktoren</div>
+<table class="tbl"><tr><th>Biologisch</th><th>Psychologisch</th><th>Soziokulturell</th></tr>
+<tr><td>Sinnesorgane, Gehirn</td><td>Erfahrung, Emotion, Motivation</td><td>Kultur, Normen, Sprache</td></tr></table>`,
+dt:`<div class="slabel">Wahrnehmung als Konstruktion</div>
+<p>Das Gehirn konstruiert aktiv eine Wirklichkeit aus unvollständigen Reizen – beeinflusst durch Erwartungen, Vorerfahrungen und den Kontext.</p>
+<div class="slabel">Biologische Einflussfaktoren</div>
+<ul><li>Leistungsfähigkeit der Sinnesorgane</li><li>Neurobiologische Verarbeitungsprozesse</li><li>Aufmerksamkeitssysteme im Gehirn</li></ul>
+<div class="slabel">Psychologische Einflussfaktoren</div>
+<ul><li>Vorerfahrungen & Schemata</li><li>Emotionale Zustände (Angst macht selektiver)</li><li>Motivation & Bedürfnisse</li><li>Erwartungen (Top-Down-Verarbeitung)</li></ul>
+<div class="slabel">Soziokulturelle Einflussfaktoren</div>
+<ul><li>Kulturelle Normen & Werte</li><li>Sprache (beeinflusst Kategorisierung)</li><li>Soziale Rollenerwartungen</li></ul>
+<div class="box green">✅ Prüfungsrelevant: Wahrnehmungsphänomene (Halo-Effekt, selektive Wahrnehmung) erklären können</div>`},
+
+{id:'w03', cls:'11', num:'03', title:'Gedächtnis', sub:'Modell nach Markowitsch + Lernstrategien',
+ov:`<div class="slabel">Gedächtnisspeicher nach Markowitsch</div>
+<div class="box blue">Ultrakurzzeit → Kurzzeitgedächtnis (Arbeitsgedächtnis) → Langzeitspeicher</div>
+<table class="tbl"><tr><th>Speicher</th><th>Dauer</th><th>Kapazität</th></tr>
+<tr><td>Ultrakurzzeit</td><td>Millisekunden</td><td>Groß, flüchtig</td></tr>
+<tr><td>Kurzzeit/Arbeit</td><td>Sek.–Min.</td><td>~7±2 Einheiten</td></tr>
+<tr><td>Langzeit</td><td>Dauerhaft</td><td>Unbegrenzt</td></tr></table>
+<div class="slabel">Langzeitspeicher (Markowitsch)</div>
+<div class="chips"><span class="chip b">Episodisch</span><span class="chip g">Semantisch</span><span class="chip a">Prozedural</span><span class="chip p">Priming</span><span class="chip t">Perzeptuell</span></div>`,
+dt:`<div class="slabel">Markowitsch – Langzeitspeicher ausführlich</div>
+<table class="tbl"><tr><th>System</th><th>Inhalt</th><th>Beispiel</th></tr>
+<tr><td><strong>Episodisch</strong></td><td>Persönliche Erlebnisse (Ort + Zeit)</td><td>Erster Schultag</td></tr>
+<tr><td><strong>Semantisch</strong></td><td>Allgemeinwissen, Fakten</td><td>Hauptstädte, PP-Theorien</td></tr>
+<tr><td><strong>Prozedural</strong></td><td>Automatisierte Fähigkeiten</td><td>Fahrrad fahren</td></tr>
+<tr><td><strong>Priming</strong></td><td>Unbewusste Reaktionsbereitschaft</td><td>Wortergänzung</td></tr>
+<tr><td><strong>Perzeptuell</strong></td><td>Sinnesbasierte Muster</td><td>Gesichtserkennung</td></tr></table>
+<div class="slabel">Kontrollprozesse</div>
+<p><strong>Rehearsal:</strong> Wiederholung → verlängert KZG-Speicherung</p>
+<p><strong>Chunking:</strong> Zusammenfassen zu Einheiten (0711-123456 statt 0-7-1-1…)</p>
+<p><strong>Elaboration:</strong> Tiefe Verarbeitung → besseres Langzeitbehalten</p>
+<div class="slabel">Effektive Lernstrategien (elaboriertes Lernen)</div>
+<ul><li><strong>Verteiltes Lernen</strong> (Pausen!) > Massenlernen</li><li><strong>Aktives Abrufen</strong> (Testen) > passives Lesen</li><li><strong>Elaboration:</strong> Inhalte vernetzen, eigene Beispiele finden</li><li><strong>Visualisieren:</strong> Mindmaps, Schemata</li></ul>
+<div class="box amber">💡 Neurobiologisch: Hippocampus = wichtig für episodisches Gedächtnis. Amygdala verstärkt emotionale Erinnerungen.</div>`},
+
+{id:'w04', cls:'11', num:'04', title:'Emotion', sub:'Komponenten + Angst + Emotionsregulation',
+ov:`<div class="slabel">4 Komponenten einer Emotion</div>
+<div class="chips"><span class="chip b">Körperlich-physiologisch</span><span class="chip b">Subjektiv-erlebend</span><span class="chip b">Expressiv-motorisch</span><span class="chip b">Kognitiv-bewertend</span></div>
+<div class="slabel">Angst als Lehrplan-Beispiel</div>
+<table class="tbl"><tr><th>Komponente</th><th>Bei Angst</th></tr>
+<tr><td>Körperlich</td><td>Herzrasen, Schwitzen, Zittern</td></tr>
+<tr><td>Subjektiv</td><td>„Ich fühle mich bedroht"</td></tr>
+<tr><td>Ausdruck</td><td>Weite Augen, erstarrte Mimik</td></tr>
+<tr><td>Kognitiv</td><td>„Das ist gefährlich"</td></tr></table>`,
+dt:`<div class="slabel">Emotionsregulation – Strategien</div>
+<table class="tbl"><tr><th>Strategie</th><th>Methoden</th><th>Wirkung</th></tr>
+<tr><td><strong>Kognitive Umbewertung</strong></td><td>Reframing, neue Perspektive</td><td>Langfristig sehr effektiv ✅</td></tr>
+<tr><td><strong>Behavioral</strong></td><td>Sport, Musik, Reden</td><td>Kurzfristig gut ✅</td></tr>
+<tr><td><strong>Soziale Unterstützung</strong></td><td>Teilen, Hilfe suchen</td><td>Sehr effektiv ✅</td></tr>
+<tr><td><strong>Suppression</strong></td><td>Emotion verbergen/unterdrücken</td><td>Kurzfristig OK, langfristig schädlich ⚠️</td></tr></table>
+<div class="slabel">Selbstregulation</div>
+<p>Emotionsregulation ist eine Schlüsselkompetenz für Sozialberufe. Im Praktikum: eigene Gefühle wahrnehmen und professionell steuern.</p>
+<div class="box teal">🔗 Emotion ↔ Kognition: Angst blockiert Denken. Gute Stimmung fördert Kreativität. (→ ZRM)</div>`},
+
+{id:'w05', cls:'11', num:'05', title:'Motivation', sub:'Rubikon-Modell + Leistungsmotivation',
+ov:`<div class="slabel">Rubikon-Modell (Heckhausen & Gollwitzer)</div>
+<table class="tbl"><tr><th>Phase</th><th>Geisteszustand</th><th>Frage</th></tr>
+<tr><td><strong>Prädezisional</strong></td><td>Offen, abwägend</td><td>Was will ich?</td></tr>
+<tr><td><strong>── RUBIKON ──</strong></td><td>Entscheidung!</td><td>Commitment</td></tr>
+<tr><td><strong>Präaktional</strong></td><td>Planend</td><td>Wie erreiche ich es?</td></tr>
+<tr><td><strong>Aktional</strong></td><td>Fokussiert</td><td>Handlung ausführen</td></tr>
+<tr><td><strong>Postaktional</strong></td><td>Bewertend</td><td>War es gut?</td></tr></table>
+<div class="slabel">Intrinsisch vs. Extrinsisch</div>
+<p><strong>Intrinsisch</strong> = von innen (Interesse, Freude) · <strong>Extrinsisch</strong> = von außen (Belohnung, Druck)</p>`,
+dt:`<div class="slabel">Leistungsmotivation als Lehrplan-Beispiel</div>
+<p>Leistungsmotivation = Streben nach einem Gütemaßstab der Tüchtigkeit.</p>
+<p><strong>Atkinson:</strong> Verhalten = Erwartung × Anreiz</p>
+<ul><li>Erfolgsmotiviert → wählen mittelschwere Aufgaben (echte Herausforderung)</li><li>Misserfolgsmotiviert → sehr leicht (sicher) oder sehr schwer (Niederlage entschuldbar)</li></ul>
+<div class="slabel">Motive</div>
+<p>Motive = relativ stabile Bereitschaften, auf bestimmte Situationen mit bestimmten Gefühlen zu reagieren (z.B. Leistungsmotiv, Machtmotiv, Anschlussmotiv)</p>
+<div class="slabel">Korrumpierungseffekt</div>
+<p>Wird eine <strong>intrinsisch motivierte</strong> Tätigkeit plötzlich extern belohnt → sinkt die intrinsische Motivation!</p>
+<div class="slabel">Konsequenzen für Selbstmanagement</div>
+<ul><li>Eigene Motive kennen</li><li>Realistische Ziele setzen (Rubikon-Phase bewusst nutzen)</li><li>Intrinsische Motivation stärken</li></ul>
+<div class="box teal">🔗 Zusammenhang mit Bandura: Hohe Selbstwirksamkeit → höhere Motivation + Ausdauer</div>`},
+
+{id:'w06', cls:'11', num:'06', title:'Wechselwirkung K–E–M & ZRM', sub:'Kognition, Emotion, Motivation + Zürcher Ressourcen Modell',
+ov:`<div class="slabel">Wechselwirkungen</div>
+<table class="tbl"><tr><th>Von</th><th>→ Auf</th><th>Beispiel</th></tr>
+<tr><td>Emotion</td><td>Kognition</td><td>Angst blockiert Denken</td></tr>
+<tr><td>Kognition</td><td>Emotion</td><td>Neg. Gedanken → Traurigkeit</td></tr>
+<tr><td>Motivation</td><td>Wahrnehmung</td><td>Hunger → alles sieht nach Essen aus</td></tr></table>
+<div class="box amber">⚠️ Kein Faktor wirkt allein – immer Wechselwirkung!</div>
+<div class="slabel">ZRM – Zürcher Ressourcen Modell (Storch & Krause)</div>
+<div class="box blue">Körpersignal → Motto-Ziel → Ressourcen → Alltag</div>`,
+dt:`<div class="slabel">ZRM – ausführlich</div>
+<p>Entwickelt von <strong>Maja Storch & Frank Krause</strong>, Universität Zürich. Verbindet Emotion, Kognition und Motivation.</p>
+<table class="tbl"><tr><th>Schritt</th><th>Was?</th><th>Warum?</th></tr>
+<tr><td>1. Körpersignal</td><td>Emotionale Reaktion bewusst wahrnehmen</td><td>Der Körper zeigt, was wirklich wichtig ist</td></tr>
+<tr><td>2. Motto-Ziel</td><td>Bild/Metapher als emotionaler Anker</td><td>Spricht unbewusstes System an</td></tr>
+<tr><td>3. Ressourcen</td><td>Stärken, Erinnerungen aktivieren</td><td>Handlungsbereitschaft aufbauen</td></tr>
+<tr><td>4. Transfer</td><td>Konkrete Handlungen + Hindernisse antizipieren</td><td>Vom Wunsch zur Handlung</td></tr></table>
+<div class="box green">✅ Motto-Ziel statt Muss-Ziel: „Ich bin wie ein Baum im Sturm" statt „Ich muss ruhig bleiben"</div>
+<p><strong>Anwendung im Sozialbereich:</strong> Selbstmanagement von Fachkräften, Beratung von Klienten bei Verhaltensänderungen</p>`},
+
+// ──────────────────────────────────────
+// KLASSE 11 – LB 3: Erziehung & Bildung
+// ──────────────────────────────────────
+{id:'w07', cls:'11', num:'07', title:'Erziehung & Bildung', sub:'Merkmale + Stile nach Tausch/Tausch + Mündigkeit',
+ov:`<div class="slabel">Definitionen</div>
+<table class="tbl"><tr><th></th><th>Erziehung</th><th>Bildung</th></tr>
+<tr><td>Was?</td><td>Fremdlernprozess, intentional</td><td>Selbst- & Fremdlernprozess</td></tr>
+<tr><td>Ziel</td><td>Verhalten & Einstellungen formen</td><td>Mündiger Mensch</td></tr>
+<tr><td>Wer?</td><td>Pädagoge → Edukand</td><td>Selbst + Umwelt</td></tr></table>
+<div class="slabel">Erziehungsstile nach Tausch/Tausch</div>
+<div class="chips"><span class="chip b">Autoritär</span><span class="chip g">Sozialintegrativ</span><span class="chip a">Laissez-faire</span></div>`,
+dt:`<div class="slabel">Merkmale von Erziehung (laut Lehrplan)</div>
+<ul><li>Soziale Beziehung (min. 2 Personen)</li><li>Emotionaler Bezug zwischen Pädagoge und Edukand</li><li>Fremdlernverhältnis (bewusste Einflussnahme)</li><li>Bewusste Zielvorgaben</li></ul>
+<div class="slabel">Erziehungsstile nach Tausch/Tausch (Lehrplan!)</div>
+<table class="tbl"><tr><th>Stil</th><th>Merkmale</th><th>Wirkung</th></tr>
+<tr><td><strong>Autoritär</strong></td><td>Strenge Kontrolle, wenig Wärme, Gehorchen</td><td>Angst, wenig Initiative, Aggression</td></tr>
+<tr><td><strong>Sozialintegrativ</strong></td><td>Hohe Wärme + klare Grenzen, Begründungen</td><td>Selbstständigkeit, soziale Kompetenz ✅</td></tr>
+<tr><td><strong>Laissez-faire</strong></td><td>Kaum Kontrolle, viel Freiheit</td><td>Orientierungslosigkeit, Unsicherheit</td></tr></table>
+<div class="box amber">⚠️ Abi Bayern: Tausch/Tausch (nicht Baumrind!) – sozialintegrativ ist das Ideal</div>
+<div class="slabel">Pädagogische Mündigkeit</div>
+<p>Übergreifendes Ziel: <strong>Selbst-, Sach- und Sozialkompetenz</strong></p>
+<p>Kant: „Ausgang des Menschen aus seiner selbstverschuldeten Unmündigkeit."</p>
+<p>Heinrich Roth: Mündigkeit als <strong>Selbst-, Sach- und Sozialkompetenz</strong> – das Ziel aller Erziehung</p>`},
+
+{id:'w08', cls:'11', num:'08', title:'Kindertageseinrichtung', sub:'Kindergarten + BayBEP',
+ov:`<div class="slabel">Dreifachauftrag</div>
+<div class="chips"><span class="chip g">Bildung</span><span class="chip g">Erziehung</span><span class="chip g">Betreuung</span></div>
+<div class="slabel">Förderbereiche laut BayBEP (Bayerischer Bildungs- und Erziehungsplan)</div>
+<div class="chips"><span class="chip b">Sprache</span><span class="chip b">Mathematik</span><span class="chip b">Naturwissenschaften</span><span class="chip b">Musik</span><span class="chip b">Bewegung</span><span class="chip b">Werte</span><span class="chip b">Medien</span><span class="chip b">Ästhetik</span></div>`,
+dt:`<div class="slabel">Rechtliche Grundlage</div>
+<p>§ 22 SGB VIII: Kinder- und Jugendhilfegesetz → Dreifachauftrag der Kita</p>
+<div class="slabel">Entwicklungsfelder 3–6 Jahre</div>
+<table class="tbl"><tr><th>Bereich</th><th>Inhalte</th></tr>
+<tr><td><strong>Sozial-emotional</strong></td><td>Regeln, Konflikte, Empathie, erste Freundschaften</td></tr>
+<tr><td><strong>Sprache</strong></td><td>Wortschatz, Grammatik, Erzählen, Dialog</td></tr>
+<tr><td><strong>Motorik grob</strong></td><td>Klettern, Springen, Balancieren, Koordination</td></tr>
+<tr><td><strong>Motorik fein</strong></td><td>Malen, Schneiden, Schreibvorbereitung</td></tr>
+<tr><td><strong>Kognition</strong></td><td>Symbolspiel, Zahlen, Mengen, Kreativität</td></tr>
+<tr><td><strong>Identität</strong></td><td>Selbstwahrnehmung, Geschlechtsidentität, Autonomie</td></tr></table>
+<div class="slabel">Problemlagen in der Kindertageseinrichtung</div>
+<ul><li>Verhaltensauffälligkeiten, Entwicklungsverzögerungen</li><li>Sprachbarrieren, interkulturelle Herausforderungen</li><li>Kindeswohlgefährdung erkennen und handeln</li></ul>
+<div class="box green">✅ BayBEP = Bildungs- und Erziehungsplan Bayern – gesetzliche Grundlage für alle Kitas in Bayern</div>`},
+
+// ──────────────────────────────────────
+// KLASSE 11 – LB 4: Lerntheorien
+// ──────────────────────────────────────
+{id:'w09', cls:'11', num:'09', title:'Lernen – Begriff & Behaviorismus', sub:'Definition + Klassisches Konditionieren (Pawlow)',
+ov:`<div class="slabel">Begriff Lernen</div>
+<p>Lernen = <strong>relativ dauerhafte Veränderung</strong> des Verhaltens/Erlebens aufgrund von Erfahrung. Abzugrenzen von: Reifung, Ermüdung, Drogeneinfluss.</p>
+<div class="slabel">Klassisches Konditionieren – Pawlow</div>
+<table class="tbl"><tr><th>Phase</th><th>Schema</th></tr>
+<tr><td>Natürlich</td><td>UCS (Futter) → UCR (Speichel)</td></tr>
+<tr><td>Training</td><td>CS (Glocke) + UCS → UCR</td></tr>
+<tr><td>Gelernt</td><td>CS (Glocke) → CR (Speichel)</td></tr></table>`,
+dt:`<div class="slabel">Fachbegriffe vollständig</div>
+<table class="tbl"><tr><th>Abk.</th><th>Begriff</th><th>Beispiel</th></tr>
+<tr><td>UCS</td><td>Unkonditionierter Stimulus</td><td>Futter</td></tr>
+<tr><td>UCR</td><td>Unkonditionierte Reaktion</td><td>Speichelfluss</td></tr>
+<tr><td>CS</td><td>Konditionierter Stimulus</td><td>Glocke</td></tr>
+<tr><td>CR</td><td>Konditionierte Reaktion</td><td>Speichel auf Glocke</td></tr></table>
+<div class="slabel">Wichtige Phänomene</div>
+<table class="tbl"><tr><th>Phänomen</th><th>Bedeutung</th></tr>
+<tr><td><strong>Extinktion</strong></td><td>CS ohne UCS → CR erlischt</td></tr>
+<tr><td><strong>Spontanerholung</strong></td><td>Erloschene CR kehrt nach Pause kurz zurück</td></tr>
+<tr><td><strong>Generalisierung</strong></td><td>Ähnliche Reize lösen auch CR aus</td></tr>
+<tr><td><strong>Diskriminierung</strong></td><td>Nur exakter CS → CR</td></tr></table>
+<div class="slabel">Anwendung im Sozialbereich</div>
+<ul><li>Phobien erklären (z.B. Zahnarztangst)</li><li>Suchtverhalten: Reize lösen Verlangen aus</li><li>Watson & Rayner 1920: Kleiner Albert – konditionierte Angstreaktionen bei Kindern</li></ul>
+<div class="box green">✅ Kognitive Wende: Vom Behaviorismus (Reiz→Reaktion) zum Kognitivismus (Mensch als Informationsverarbeiter)</div>`},
+
+{id:'w10', cls:'11', num:'10', title:'Operantes Konditionieren', sub:'Thorndike + Skinner',
+ov:`<div class="slabel">Thorndike – Gesetz der Wirkung</div>
+<p>Verhalten + positive Folge → wird wiederholt. Katzen in der Problembox.</p>
+<div class="slabel">Skinner – Verstärkung und Bestrafung</div>
+<table class="tbl"><tr><th></th><th>➕ Positiv (geben)</th><th>➖ Negativ (wegnehmen)</th></tr>
+<tr><td><strong>Verstärkung ↑</strong></td><td>Lob geben</td><td>Aufgabe streichen</td></tr>
+<tr><td><strong>Bestrafung ↓</strong></td><td>Strafe geben</td><td>Handy wegnehmen</td></tr></table>
+<div class="box amber">⚠️ Positiv/Negativ = hinzufügen/wegnehmen – NICHT gut/schlecht!</div>`,
+dt:`<div class="slabel">Verstärkerpläne (Skinner)</div>
+<table class="tbl"><tr><th>Plan</th><th>Wann?</th><th>Wirkung</th></tr>
+<tr><td>Kontinuierlich</td><td>Nach jeder Reaktion</td><td>Schnell lernen, schnell erlöschen</td></tr>
+<tr><td>Fester Intervall</td><td>Nach fester Zeit</td><td>Pause nach Verstärkung</td></tr>
+<tr><td>Variabler Intervall</td><td>Nach wechselnder Zeit</td><td>Gleichmäßiges Verhalten</td></tr>
+<tr><td>Variables Verhältnis</td><td>Nach wechselnder Anzahl</td><td>Sehr resistent – wie Glücksspiel!</td></tr></table>
+<div class="slabel">Shaping & Prompting</div>
+<p><strong>Shaping:</strong> Schrittweise Annäherung ans Zielverhalten – jede Näherung wird verstärkt.</p>
+<p><strong>Prompting:</strong> Hilfen geben, dann ausblenden.</p>
+<div class="slabel">Kritik am Strafen</div>
+<ul><li>Zeigt nicht, was richtig ist</li><li>Kann Angst und Aggression erzeugen</li><li>Wirkt nur wenn: sofort, konsequent, verhältnismäßig</li></ul>
+<div class="slabel">Verhaltensorientiertes Konzept (Einzelhilfe) – Lehrplan 12!</div>
+<div class="box blue">Analyse → Planung → Verhaltensmodifikation → Evaluation</div>`},
+
+{id:'w11', cls:'11', num:'11', title:'Sozial-kognitive Lerntheorie', sub:'Bandura – Modelllernen + Selbstwirksamkeit',
+ov:`<div class="slabel">Lernen durch Beobachtung (Modelllernen)</div>
+<div class="chips"><span class="chip b">1. Aufmerksamkeit</span><span class="chip b">2. Behalten</span><span class="chip b">3. Reproduktion</span><span class="chip b">4. Motivation</span></div>
+<div class="slabel">Selbstwirksamkeit</div>
+<div class="box green">= Überzeugung, eine Aufgabe selbst erfolgreich ausführen zu können → Schlüssel für Motivation & Ausdauer</div>
+<div class="slabel">Reziproker Determinismus</div>
+<p>Person ↔ Verhalten ↔ Umwelt – beeinflussen sich gegenseitig!</p>`,
+dt:`<div class="slabel">Bandura – Hintergrund</div>
+<p>Bobo-Doll-Experiment (1961): Kinder ahmten aggressives Verhalten nach – auch ohne Belohnung. Beweis: Lernen ohne direkte Verstärkung möglich.</p>
+<div class="slabel">4 Prozesse – ausführlich</div>
+<table class="tbl"><tr><th>Prozess</th><th>Was ist wichtig?</th></tr>
+<tr><td><strong>Aufmerksamkeit</strong></td><td>Attraktivität, Kompetenz, Ähnlichkeit des Modells</td></tr>
+<tr><td><strong>Behalten</strong></td><td>Mentale Repräsentation (Bild oder Sprache)</td></tr>
+<tr><td><strong>Reproduktion</strong></td><td>Motorische Fähigkeit vorhanden?</td></tr>
+<tr><td><strong>Motivation</strong></td><td>Stellvertretende Verstärkung, eigene Erwartungen</td></tr></table>
+<div class="slabel">Selbstwirksamkeit – Quellen (Lehrplan: Überzeugungen)</div>
+<ul><li><strong>Eigene Erfolgserfahrungen</strong> (stärkste Quelle)</li><li>Stellvertretende Erfahrungen (andere schaffen es)</li><li>Verbale Überzeugung (Ermutigung, Lob)</li><li>Physiologische Zustände (Aufregung positiv deuten)</li></ul>
+<div class="slabel">Selbstregulation nach Bandura (Lehrplan 12!)</div>
+<p><strong>Self-Efficacy-Mechanismus:</strong> Selbstwirksamkeit reguliert Zielsetzung & Ausdauer</p>
+<p><strong>Self-Evaluative-Mechanismus:</strong> Eigenes Verhalten an Standards bewerten</p>
+<div class="box teal">🔗 Medien und Lernen: Vorbildwirkung von Medienmodellen erklären (z.B. Gewalt in Videospielen)</div>`},
+
+{id:'w12', cls:'11', num:'12', title:'Kognitivismus & Kognition', sub:'Kognitive Wende + Verhaltens- & Handlungskonzept',
+ov:`<div class="slabel">Kognitive Wende</div>
+<p>Abkehr vom reinen Behaviorismus → Mensch als <strong>aktiver Informationsverarbeiter</strong>, nicht nur Reiz-Reaktions-Automat.</p>
+<div class="slabel">Kognition (= psychische Fähigkeiten)</div>
+<div class="chips"><span class="chip b">Wahrnehmung</span><span class="chip b">Denken</span><span class="chip b">Problemlösen</span><span class="chip b">Sprache</span><span class="chip b">Gedächtnis</span></div>
+<div class="slabel">Verhalten vs. Handlung</div>
+<table class="tbl"><tr><th></th><th>Verhalten</th><th>Handlung</th></tr>
+<tr><td>Art</td><td>reaktiv, beobachtbar</td><td>bewusst, zielgerichtet</td></tr>
+<tr><td>Bewusstsein</td><td>Nein</td><td>Ja</td></tr>
+<tr><td>Verantwortung</td><td>Nein</td><td>Ja</td></tr></table>`,
+dt:`<div class="slabel">Leitgedanken des Kognitivismus</div>
+<ul><li>Innere mentale Prozesse sind wissenschaftlich erforschbar</li><li>Menschen konstruieren aktiv Bedeutung</li><li>Schemata: mentale Wissensstrukturen steuern Wahrnehmung & Verhalten</li><li>Kognitive Dissonanz: Widerspruch zw. Einstellungen/Verhalten → Unbehagen → Änderung</li></ul>
+<div class="slabel">Verhaltensorientiertes Konzept (Lehrplan 12 – Soziale Arbeit)</div>
+<div class="box blue">1. Analyse → 2. Planung → 3. Verhaltensmodifikation → 4. Evaluation</div>
+<p>Basiert auf Lerntheorien (operantes Konditionieren, Modelllernen). Wird in der Sozialen Arbeit als Handlungskonzept eingesetzt.</p>
+<div class="slabel">Handlung nach Rubikon-Modell</div>
+<p>Handlungen sind zielgerichtet, bewusst und verantwortbar. Phasen: Wollen → Planen → Handeln → Bewerten (→ Rubikon-Modell Motivation)</p>`},
+
+// ──────────────────────────────────────
+// KLASSE 12 – LB 1: Entwicklung
+// ──────────────────────────────────────
+{id:'w13', cls:'12', num:'13', title:'Entwicklung – Begriff & Bedingungen', sub:'Merkmale + Anlage/Umwelt/Selbststeuerung',
+ov:`<div class="slabel">Merkmale von Entwicklung</div>
+<div class="chips"><span class="chip p">Quantitativ</span><span class="chip p">Qualitativ</span><span class="chip p">Multidirektional</span><span class="chip p">Lebenslang</span><span class="chip p">Plastisch</span></div>
+<div class="slabel">Bedingungen (Lehrplan!)</div>
+<table class="tbl"><tr><th>Bedingung</th><th>Bedeutung</th></tr>
+<tr><td><strong>Anlage</strong></td><td>Gene, Biologie, Temperament</td></tr>
+<tr><td><strong>Umwelt</strong></td><td>Familie, Kultur, Erziehung, Erfahrungen</td></tr>
+<tr><td><strong>Selbststeuerung</strong></td><td>Eigene Entscheidungen, aktive Mitgestaltung</td></tr></table>`,
+dt:`<div class="slabel">Wechselwirkungsprozesse</div>
+<p>Alle drei Bedingungen wirken <strong>immer zusammen</strong> – kein Entweder-Oder!</p>
+<p><strong>Epigenetik:</strong> Umwelt kann Gene an-/ausschalten → Gene sind kein starres Schicksal</p>
+<div class="slabel">Selbststeuerung (neu im Lehrplan!)</div>
+<p>Menschen sind nicht nur Produkte ihrer Gene und Umwelt – sie gestalten ihre Entwicklung aktiv mit. Wichtig für Resilienz und Identität.</p>
+<div class="slabel">Entwicklung multifaktoriell beeinflusst</div>
+<ul><li>Keine Entwicklung verläuft linear</li><li>Individuelle Unterschiede trotz gleicher Bedingungen</li><li>Sensible Phasen: bestimmte Entwicklungsbereiche haben Zeitfenster (z.B. Sprache 0–6 J.)</li></ul>
+<div class="box green">✅ Im Abi: Entwicklungseinflüsse an einem Fallbeispiel analysieren – alle 3 Bedingungen nennen!</div>`},
+
+{id:'w14', cls:'12', num:'14', title:'Psychoanalyse – Freud', sub:'Topografisches Modell + Instanzen + Phasen + Abwehr',
+ov:`<div class="slabel">Topografisches Modell (Eisberg)</div>
+<div class="chips"><span class="chip p">Bewusst (Spitze)</span><span class="chip a">Vorbewusst</span><span class="chip b">Unbewusst (Basis)</span></div>
+<div class="slabel">Instanzenmodell</div>
+<table class="tbl"><tr><th>Instanz</th><th>Prinzip</th><th>Funktion</th></tr>
+<tr><td><strong>Es</strong></td><td>Lustprinzip</td><td>Triebe, Wünsche – unbewusst, „sofort!"</td></tr>
+<tr><td><strong>Ich</strong></td><td>Realitätsprinzip</td><td>Vermittler – bewusst + unbewusst</td></tr>
+<tr><td><strong>Über-Ich</strong></td><td>Moralitätsprinzip</td><td>Gewissen, verinnerlichte Normen</td></tr></table>`,
+dt:`<div class="slabel">Trieblehre</div>
+<p><strong>Libido (Eros):</strong> Lebenstrieb – Liebe, Sexualität, Bindung</p>
+<p><strong>Thanatos:</strong> Todestrieb – Aggression, Destruktion</p>
+<div class="slabel">Psychosexuelle Entwicklung</div>
+<table class="tbl"><tr><th>Phase</th><th>Alter</th><th>Thema / Konflikt</th></tr>
+<tr><td><strong>Oral</strong></td><td>0–1 J.</td><td>Mund, Nahrung, Urvertrauen</td></tr>
+<tr><td><strong>Anal</strong></td><td>1–3 J.</td><td>Kontrolle, Festhalten/Loslassen</td></tr>
+<tr><td><strong>Phallisch</strong></td><td>3–6 J.</td><td>Ödipus-/Elektrakomplex, Identifikation</td></tr>
+<tr><td><strong>Latenz</strong></td><td>6–11 J.</td><td>Ruhe, Schule, soziale Regeln</td></tr>
+<tr><td><strong>Genital</strong></td><td>ab Pubertät</td><td>Reife Sexualität, Ablösung</td></tr></table>
+<div class="slabel">Abwehr als Ich-Funktion (Lehrplan: Verdrängung, Projektion, Fixierung, Regression, Identifikation)</div>
+<table class="tbl"><tr><th>Abwehr</th><th>Was passiert?</th></tr>
+<tr><td><strong>Verdrängung</strong></td><td>Unangenehmes ins Unbewusste</td></tr>
+<tr><td><strong>Projektion</strong></td><td>Eigene Gefühle auf andere übertragen</td></tr>
+<tr><td><strong>Fixierung</strong></td><td>Steckenbleiben in einer Phase</td></tr>
+<tr><td><strong>Regression</strong></td><td>Rückfall in frühere Verhaltensweisen</td></tr>
+<tr><td><strong>Identifikation</strong></td><td>Übernahme von Eigenschaften anderer</td></tr></table>
+<div class="box red">⚠️ Kritische Würdigung (Lehrplan!): Mangelnde empirische Überprüfbarkeit, zu stark sexualisiert, Stichprobe zu klein</div>`},
+
+{id:'w15', cls:'12', num:'15', title:'Bindung', sub:'Bindungsbegriff + Phasen + Typen + Frühpädagogik',
+ov:`<div class="slabel">Bindung (Bowlby/Ainsworth)</div>
+<p>Bindung = emotionale Beziehung zu einer <strong>Bezugsperson</strong>, die Sicherheit und Schutz gibt. Lebenslang wichtig.</p>
+<div class="slabel">Bindungsphasen (Bowlby)</div>
+<table class="tbl"><tr><th>Phase</th><th>Alter</th><th>Merkmal</th></tr>
+<tr><td>Vorbindungsphase</td><td>0–3 Mo.</td><td>Orientierung zu allen Menschen</td></tr>
+<tr><td>Bindungsanbahnung</td><td>3–6 Mo.</td><td>Differenzierung bekannt/unbekannt</td></tr>
+<tr><td>Bindung</td><td>6–24 Mo.</td><td>Spezifische Bindung, Fremdeln</td></tr>
+<tr><td>Reziproke Beziehung</td><td>ab 24 Mo.</td><td>Verstehen von Trennung</td></tr></table>`,
+dt:`<div class="slabel">Bindungstypen (Ainsworth – Fremde-Situation-Test)</div>
+<table class="tbl"><tr><th>Typ</th><th>Verhalten bei Trennung</th><th>Ursache</th></tr>
+<tr><td><strong>Sicher (B)</strong></td><td>Protestiert, beruhigt sich bei Rückkehr</td><td>Feinfühlige Bezugsperson</td></tr>
+<tr><td><strong>Unsicher-vermeidend (A)</strong></td><td>Zeigt kaum Protest, ignoriert Bezugsperson</td><td>Emotional wenig verfügbar</td></tr>
+<tr><td><strong>Unsicher-ambivalent (C)</strong></td><td>Stark protestierend, lässt sich nicht beruhigen</td><td>Inkonsistente Bezugsperson</td></tr>
+<tr><td><strong>Desorganisiert (D)</strong></td><td>Widersprüchliches Verhalten</td><td>Traumatisierende Bezugsperson</td></tr></table>
+<div class="slabel">Primäre & Sekundäre Bindungsbeziehungen (Ahnert – Lehrplan!)</div>
+<p><strong>Primär:</strong> Eltern – bilden sich in der frühen Kindheit</p>
+<p><strong>Sekundär:</strong> Erzieherinnen, Lehrkräfte, Freunde – entstehen später</p>
+<p>Im Jugendalter: Bindung zu Peers wird wichtiger, Elternbindung bleibt aber relevant.</p>
+<div class="slabel">Frühpädagogik – Bindungsförderung</div>
+<ul><li><strong>Feinfühligkeit:</strong> Signale des Kindes wahrnehmen, richtig deuten und angemessen reagieren</li><li><strong>Eingewöhnungskonzept</strong> (Berliner Modell): Langsame Übergabe in der Kita mit Bezugspersonenpräsenz</li><li>Beziehungsqualität der Erzieher:in als Schutzfaktor</li></ul>
+<div class="box teal">🔗 Bindung → Resilienz: Sichere Bindung ist wichtigster Schutzfaktor!</div>`},
+
+{id:'w16', cls:'12', num:'16', title:'Lebensspanne & Entwicklungsaufgaben', sub:'Baltes + Jugend + frühes Erwachsenenalter',
+ov:`<div class="slabel">Lebensspannentheorie (Baltes)</div>
+<p>Entwicklung ist <strong>lebenslang</strong>, <strong>multidirektional</strong> (Gewinne + Verluste) und <strong>plastisch</strong>.</p>
+<div class="slabel">Entwicklungsaufgaben (Lehrplan: 2 Bereiche)</div>
+<table class="tbl"><tr><th>Jugend (11–18 J.)</th><th>Frühes Erwachsenenalter (18–28 J.)</th></tr>
+<tr><td>Identitätsfindung</td><td>Berufseinstieg & Berufsorientierung</td></tr>
+<tr><td>Peer-Beziehungen aufbauen</td><td>Partnerschaft/Ehe</td></tr>
+<tr><td>Moralisches Urteilen entwickeln</td><td>Persönlichkeit entfalten</td></tr>
+<tr><td>Ablösung von Eltern</td><td>Familie gründen (oder nicht)</td></tr></table>`,
+dt:`<div class="slabel">Baltes – Prinzipien der Lebensspannenpsychologie</div>
+<ul><li>Entwicklung als lebenslanger Prozess (nicht nur Kindheit)</li><li>Multidirektionalität: Gleichzeitige Gewinne und Verluste</li><li>Plastizität: Entwicklung ist formbar und veränderbar</li><li>Multidimensionalität: viele Bereiche (kognitiv, sozial, körperlich)</li><li>Eingebettetheit in Kontext und Geschichte</li></ul>
+<div class="slabel">Jugend – moralisches Urteilen (Lehrplan!)</div>
+<p>Kohlberg: Moralentwicklung in Stufen. Jugendliche entwickeln zunehmend postkonventionelles Denken (Prinzipien > Regeln).</p>
+<p>Kontext: Freundeskreis und Bildungsinstitutionen als Lernfelder für moralisches Urteil.</p>
+<div class="slabel">Frühes Erwachsenenalter – Identität (Lehrplan!)</div>
+<p>Entfaltung der personalen Struktur von Selbst und Persönlichkeit → Verbindung zu Rogers (Selbstkonzept) und Marcia (Identität).</p>
+<div class="box purple">🔗 Lebensspanne + Freud (Phasen) + Bindung + Resilienz + Identität (Marcia) = Lernbereich 12.1 gesamt</div>`},
+
+{id:'w17', cls:'12', num:'17', title:'Vulnerabilität & Resilienz', sub:'Schutzfaktoren + Risikofaktoren',
+ov:`<div class="slabel">Definitionen</div>
+<p><strong>Vulnerabilität</strong> = Verletzlichkeit, Anfälligkeit für Entwicklungsstörungen</p>
+<p><strong>Resilienz</strong> = Widerstandsfähigkeit trotz widriger Bedingungen</p>
+<div class="slabel">Schutzfaktoren (Lehrplan!)</div>
+<div class="chips"><span class="chip g">Soziale Unterstützung</span><span class="chip g">Positive Peerkontakte</span><span class="chip g">Selbstwertgefühl</span><span class="chip g">Selbstwirksamkeitserwartungen</span></div>`,
+dt:`<div class="slabel">Risikofaktoren</div>
+<ul><li>Armut, Vernachlässigung, Trauma</li><li>Psychisch kranke Eltern</li><li>Scheidung, Instabilität</li><li>Mobbing, Diskriminierung</li></ul>
+<div class="slabel">Schutzfaktoren auf 3 Ebenen</div>
+<table class="tbl"><tr><th>Ebene</th><th>Schutzfaktoren</th></tr>
+<tr><td><strong>Person</strong></td><td>Selbstwirksamkeit, Problemlösen, Optimismus, Humor</td></tr>
+<tr><td><strong>Familie</strong></td><td>Min. 1 stabile Bezugsperson, Wärme, Struktur</td></tr>
+<tr><td><strong>Gesellschaft</strong></td><td>Schule, soziales Netz, Kita, Gemeinschaft</td></tr></table>
+<div class="slabel">Kauai-Studie (Emmy Werner)</div>
+<p>Langzeitstudie auf Hawaii: 1/3 der Hochrisikokinder entwickelte sich trotz aller Widrigkeiten positiv. Resilienz ist real und förderbar – nicht angeboren!</p>
+<div class="slabel">Bedeutung für die Soziale Arbeit</div>
+<ul><li>Ressourcenorientierung statt Defizitorientierung</li><li>Schutzfaktoren stärken statt nur Probleme bekämpfen</li><li>Frühe Förderung als Investition in Resilienz</li></ul>
+<div class="box teal">🔗 Resilienz ↔ Bindung (sicher gebunden = Schutzfaktor) ↔ Selbstwirksamkeit (Bandura)</div>`},
+
+// ──────────────────────────────────────
+// KLASSE 12 – LB 2: Persönlichkeit & Identität
+// ──────────────────────────────────────
+{id:'w18', cls:'12', num:'18', title:'Persönlichkeit & Big Five', sub:'Begriff + Costa & McCrae (OCEAN)',
+ov:`<div class="slabel">Persönlichkeit – Merkmale (Lehrplan!)</div>
+<div class="chips"><span class="chip p">Stabilität</span><span class="chip p">Veränderbarkeit</span><span class="chip p">Einzigartigkeit</span></div>
+<p>Persönlichkeit = relativ stabile, individuelle Muster in Denken, Fühlen und Verhalten.</p>
+<div class="slabel">Big Five – OCEAN (Costa & McCrae)</div>
+<table class="tbl"><tr><th>Buchstabe</th><th>Eigenschaft</th><th>Hoch = ...</th></tr>
+<tr><td><strong>O</strong></td><td>Offenheit</td><td>Neugierig, kreativ</td></tr>
+<tr><td><strong>C</strong></td><td>Gewissenhaftigkeit</td><td>Zuverlässig, ordentlich</td></tr>
+<tr><td><strong>E</strong></td><td>Extraversion</td><td>Gesellig, aktiv</td></tr>
+<tr><td><strong>A</strong></td><td>Verträglichkeit</td><td>Kooperativ, empathisch</td></tr>
+<tr><td><strong>N</strong></td><td>Neurotizismus</td><td>Emotional instabil, ängstlich</td></tr></table>`,
+dt:`<div class="slabel">Persönlichkeitsinventare (Lehrplan: Auszüge aus Inventaren)</div>
+<p>Standardisierte Fragebögen zur Messung der Big Five (NEO-PI-R). Jede Dimension ist ein Spektrum – nicht entweder/oder.</p>
+<div class="slabel">Verhaltensdispositionen</div>
+<p>Big Five beschreiben <strong>Verhaltensdispositionen</strong> = Tendenzen, in bestimmten Situationen auf bestimmte Weise zu reagieren.</p>
+<div class="slabel">Stabilität & Veränderbarkeit</div>
+<ul><li>Ab ca. 30 Jahren relativ stabil</li><li>Genetisch zu ca. 40–50% erklärbar</li><li>Trotzdem: Umwelterfahrungen prägen Persönlichkeit</li></ul>
+<div class="slabel">Vergleich mit anderen Persönlichkeitstheorien</div>
+<table class="tbl"><tr><th>Theorie</th><th>Ansatz</th></tr>
+<tr><td>Big Five (Costa/McCrae)</td><td>Eigenschaftsbasiert, empirisch</td></tr>
+<tr><td>Rogers</td><td>Humanistisch, Selbstkonzept</td></tr>
+<tr><td>Bandura</td><td>Sozial-kognitiv, Selbstwirksamkeit</td></tr>
+<tr><td>Freud</td><td>Psychodynamisch, Triebe</td></tr></table>`},
+
+{id:'w19', cls:'12', num:'19', title:'Personenzentrierte Theorie', sub:'Rogers – Selbstkonzept + Kongruenz + 3 Grundhaltungen',
+ov:`<div class="slabel">Kernbegriffe (Lehrplan!)</div>
+<table class="tbl"><tr><th>Begriff</th><th>Bedeutung</th></tr>
+<tr><td><strong>Aktualisierungstendenz</strong></td><td>Natürlicher Drang zu wachsen und sich zu entwickeln</td></tr>
+<tr><td><strong>Selbstaktualisierung</strong></td><td>Auf das Selbst bezogene Aktualisierungstendenz</td></tr>
+<tr><td><strong>Realselbst</strong></td><td>Wie ich mich wahrnehme</td></tr>
+<tr><td><strong>Idealselbst</strong></td><td>Wie ich sein möchte</td></tr>
+<tr><td><strong>Kongruenz</strong></td><td>Übereinstimmung → psychisch gesund</td></tr>
+<tr><td><strong>Inkongruenz</strong></td><td>Diskrepanz → Angst, Abwehr</td></tr></table>`,
+dt:`<div class="slabel">Alle Lehrplan-Begriffe ausführlich</div>
+<p><strong>Organismischer Bewertungsprozess:</strong> Innere Instanz, die Erfahrungen danach bewertet, ob sie die Aktualisierung fördern oder hemmen.</p>
+<p><strong>Bewertungsbedingungen:</strong> Wenn Zuneigung von Bedingungen abhängt (bedingte Wertschätzung) → Kind übernimmt fremde Werte ins Selbst → Inkongruenz.</p>
+<p><strong>Wahrnehmungsverzerrung:</strong> Erfahrungen werden so wahrgenommen, dass sie zum Selbstkonzept passen.</p>
+<p><strong>Wahrnehmungsverleugnung:</strong> Erfahrungen, die nicht ins Selbstkonzept passen, werden nicht bewusst zugelassen.</p>
+<p><strong>Selbstachtung:</strong> Wie positiv ich mich selbst bewerte – beeinflusst durch Wertschätzung anderer.</p>
+<div class="slabel">3 Grundhaltungen (Therapeut/Pädagoge)</div>
+<table class="tbl"><tr><th>Haltung</th><th>Bedeutung</th><th>Praxis</th></tr>
+<tr><td><strong>Empathie</strong></td><td>Einfühlendes Verstehen</td><td>Aktives Zuhören</td></tr>
+<tr><td><strong>Kongruenz</strong></td><td>Echtheit, keine gespielte Rolle</td><td>Authentisch sein</td></tr>
+<tr><td><strong>Bed. Wertschätzung</strong></td><td>Akzeptanz ohne Bedingungen</td><td>Keine Urteile</td></tr></table>
+<div class="box teal">🔗 Rogers → Kommunikationstechniken (aktives Zuhören) + Soziale Arbeit (Beratung, Einzelhilfe)</div>`},
+
+{id:'w20', cls:'12', num:'20', title:'Sozial-kognitive Theorie (Persönlichkeit)', sub:'Bandura – Selbstwirksamkeit + Selbstregulation (Lehrplan 12)',
+ov:`<div class="slabel">Lehrplan-Begriffe (Persönlichkeit – 12. Klasse)</div>
+<table class="tbl"><tr><th>Begriff</th><th>Bedeutung</th></tr>
+<tr><td><strong>Selbstwirksamkeitserwartung</strong></td><td>„Ich kann das schaffen" – situationsspezifisch</td></tr>
+<tr><td><strong>Ergebniserwartung</strong></td><td>„Wenn ich X tue, passiert Y"</td></tr>
+<tr><td><strong>Kompetenzerwartung</strong></td><td>Überzeugung, über nötige Fähigkeiten zu verfügen</td></tr></table>
+<div class="slabel">Selbstregulation</div>
+<div class="box blue">Self-Efficacy-Mechanismus + Self-Evaluative-Mechanismus</div>`,
+dt:`<div class="slabel">Selbstregulation nach Bandura (ausführlich)</div>
+<p><strong>Self-Efficacy-Mechanismus:</strong> Hohe Selbstwirksamkeit → höhere Ziele, mehr Ausdauer, weniger Aufgabe bei Misserfolg</p>
+<p><strong>Self-Evaluative-Mechanismus:</strong> Eigenes Verhalten wird an internalen Standards bewertet → beeinflusst Motivation</p>
+<div class="slabel">Überzeugungen & Selbstregulation im Alltag</div>
+<ul><li>Selbstwirksamkeit ist erlernbar und veränderbar</li><li>Pädagogen können Selbstwirksamkeit stärken (Ermutigung, Erfolge ermöglichen)</li><li>Hohe Selbstwirksamkeit = wichtiger Schutzfaktor (→ Resilienz)</li></ul>
+<div class="box green">✅ Im Abi: Rogers UND Bandura oft zusammen – beide erklären Persönlichkeit und Identität</div>`},
+
+{id:'w21', cls:'12', num:'21', title:'Identität – Marcia', sub:'4 Identitätsstatus + Begriff',
+ov:`<div class="slabel">Begriff Identität</div>
+<p>Identität = relativ stabiles, konsistentes Bild der eigenen Person. Antwortet auf: „Wer bin ich?"</p>
+<div class="slabel">Identitätsmodell nach Marcia – 4 Status</div>
+<table class="tbl"><tr><th>Status</th><th>Krise?</th><th>Commitment?</th></tr>
+<tr><td><strong>Diffuse Identität</strong></td><td>Nein</td><td>Nein – gleichgültig</td></tr>
+<tr><td><strong>Übernommene Identität</strong></td><td>Nein</td><td>Ja – von anderen</td></tr>
+<tr><td><strong>Moratorium</strong></td><td>Ja ✅</td><td>Nein – noch suchend</td></tr>
+<tr><td><strong>Erarbeitete Identität</strong></td><td>Ja ✅</td><td>Ja ✅ – eigene Entscheidung</td></tr></table>`,
+dt:`<div class="slabel">Zwei Dimensionen</div>
+<p><strong>Identitätskrise:</strong> Aktive Auseinandersetzung mit Identitätsfragen</p>
+<p><strong>Commitment (Verpflichtung):</strong> Feste Entscheidung für Werte, Ziele, Überzeugungen</p>
+<div class="slabel">Identitätsbereiche (Lehrplan: ein Beispiel aus dem Jugendalter!)</div>
+<div class="chips"><span class="chip a">Sexuelle Identität</span><span class="chip a">Ethnische Identität</span><span class="chip a">Berufliche Identität</span><span class="chip a">Religiöse Identität</span><span class="chip a">Politische Identität</span></div>
+<div class="slabel">Identitätsfindung als Prozess</div>
+<p>Identität entsteht durch <strong>Bewusstsein, Selbstreflexion und individuelle Entscheidungen</strong> – kein einmaliger Akt!</p>
+<div class="box amber">💡 Moratorium ist POSITIV – aktive Suche ist gesünder als Diffusion oder unreflektierte Übernahme!</div>
+<div class="box teal">🔗 Identität → Marcia basiert auf Erikson (Identität vs. Diffusion in der Jugend) + Rogers (Selbstkonzept) + Lebensspanne (Baltes)</div>`},
+
+// ──────────────────────────────────────
+// KLASSE 12 – LB 3: Soziale Arbeit
+// ──────────────────────────────────────
+{id:'w22', cls:'12', num:'22', title:'Soziale Arbeit – Berufsfelder', sub:'Sozialhilfe + Gesundheits-/Altenhilfe + Kinder-/Jugendhilfe',
+ov:`<div class="slabel">Aufgabenbereiche Sozialer Arbeit (Lehrplan!)</div>
+<div class="chips"><span class="chip b">Sozialhilfe</span><span class="chip g">Gesundheits- und Altenhilfe</span><span class="chip p">Kinder- und Jugendhilfe</span></div>
+<div class="slabel">Verhaltensorientiertes Konzept (Einzelhilfe)</div>
+<div class="box blue">Analyse → Planung → Verhaltensmodifikation → Evaluation</div>
+<p>Basis: Lerntheorien (operantes Konditionieren, Modelllernen)</p>`,
+dt:`<div class="slabel">Sozialhilfe</div>
+<p>SGB XII: Grundsicherung, Hilfe zur Pflege, Eingliederungshilfe für Menschen mit Behinderungen</p>
+<div class="slabel">Gesundheits- und Altenhilfe</div>
+<p>Stationäre + ambulante Pflege, Betreuung psychisch Kranker, Suchtberatung, Behindertenarbeit</p>
+<div class="slabel">Kinder- und Jugendhilfe</div>
+<p>SGB VIII: Kindertageseinrichtungen, Jugendhilfe, Heimerziehung, Erziehungsberatung</p>
+<div class="slabel">Verhaltensorientiertes Konzept – ausführlich</div>
+<ol><li><strong>Analyse:</strong> Problem genau beschreiben, Ausgangszustand messen</li><li><strong>Planung:</strong> Zielverhalten definieren, Methode wählen</li><li><strong>Verhaltensmodifikation:</strong> Lerntheorie anwenden (Verstärkung, Modelllernen)</li><li><strong>Evaluation:</strong> Erfolg messen, Vorgehen anpassen</li></ol>
+<div class="box green">✅ Prüfung: Fallbeispiel → verhaltensorientiertes Konzept anwenden, alle 4 Schritte nennen!</div>`},
+
+{id:'w23', cls:'12', num:'23', title:'Life Model', sub:'Germain & Gitterman – Ökosoziale Theorie',
+ov:`<div class="slabel">Kernbegriffe Life Model (Lehrplan!)</div>
+<table class="tbl"><tr><th>Begriff</th><th>Bedeutung</th></tr>
+<tr><td><strong>Ökologie</strong></td><td>Wechselseitige Beziehung Mensch–Umwelt</td></tr>
+<tr><td><strong>Transaktion</strong></td><td>Wechselseitige Anpassungsprozesse</td></tr>
+<tr><td><strong>Anpassung</strong></td><td>Mensch passt sich an Umwelt an (und umgekehrt)</td></tr>
+<tr><td><strong>Habitat</strong></td><td>Physische und soziale Umgebung des Menschen</td></tr>
+<tr><td><strong>Nische</strong></td><td>Sozialer Rang, Status, Rolle</td></tr>
+<tr><td><strong>Lebens-Stress</strong></td><td>Belastungen die aus Mensch-Umwelt-Missverhältnis entstehen</td></tr>
+<tr><td><strong>Coping</strong></td><td>Bewältigungsstrategien</td></tr>
+<tr><td><strong>Ressourcen</strong></td><td>Persönliche und soziale Stärken</td></tr></table>`,
+dt:`<div class="slabel">Grundidee</div>
+<p>Menschen und ihre Umwelt stehen in ständiger <strong>Wechselwirkung</strong>. Soziale Probleme entstehen aus Missverhältnissen zwischen Mensch und Umwelt – nicht aus individuellen Defiziten.</p>
+<div class="slabel">Aufgabe der Sozialen Arbeit</div>
+<p>Sozialarbeit unterstützt Anpassungsprozesse auf <strong>beiden Seiten</strong>: Menschen stärken UND Umwelt verändern.</p>
+<div class="slabel">Coping-Strategien</div>
+<ul><li>Problemorientiertes Coping: Ursache bekämpfen</li><li>Emotionsorientiertes Coping: Gefühle regulieren</li><li>Ressourcenorientiertes Coping: Stärken nutzen</li></ul>
+<div class="box teal">🔗 Life Model ↔ Bronfenbrenner (ökologische Sicht) ↔ Resilienz (Ressourcen stärken)</div>`},
+
+{id:'w24', cls:'12', num:'24', title:'Lebensweltorientierung', sub:'Thiersch – Begriff Lebenswelt + Handlungsmaximen',
+ov:`<div class="slabel">Grundbegriff</div>
+<p><strong>Lebenswelt</strong> nach Thiersch = die alltägliche, selbstverständliche Welt, in der Menschen leben – geprägt durch Routinen, Deutungen, soziale Bezüge.</p>
+<div class="slabel">Dimensionen der Lebensweltanalyse (Lehrplan!)</div>
+<div class="chips"><span class="chip p">Erfahrene Zeit</span><span class="chip p">Erfahrener Raum</span><span class="chip p">Soziale Bezüge</span><span class="chip p">Bewältigungsaufgaben</span><span class="chip p">Gesellschaftliche Bedingungen</span></div>`,
+dt:`<div class="slabel">Handlungsmaximen Sozialer Arbeit (Lehrplan!)</div>
+<table class="tbl"><tr><th>Maxime</th><th>Bedeutung</th></tr>
+<tr><td><strong>Prävention</strong></td><td>Probleme verhindern bevor sie entstehen</td></tr>
+<tr><td><strong>Alltagsnähe</strong></td><td>Angebote im Lebenskontext der Menschen</td></tr>
+<tr><td><strong>Regionalisierung/Dezentralisierung</strong></td><td>Hilfe wohnortnah anbieten</td></tr>
+<tr><td><strong>Integration</strong></td><td>Ausgrenzung verhindern, Teilhabe fördern</td></tr>
+<tr><td><strong>Partizipation</strong></td><td>Klienten aktiv einbeziehen</td></tr>
+<tr><td><strong>Vernetzung</strong></td><td>Kooperation zwischen Einrichtungen</td></tr></table>
+<div class="slabel">Hilfe zur Selbsthilfe</div>
+<p>Ziel: Klienten befähigen, ihr Leben selbst zu gestalten – nicht abhängig machen!</p>
+<div class="box green">✅ Prüfung: Fallbeispiel → lebensweltorientiert analysieren: Welche Dimensionen sind betroffen? Welche Maximen anwenden?</div>`},
+
+// ──────────────────────────────────────
+// KLASSE 12 – LB 4: Kommunikation
+// ──────────────────────────────────────
+{id:'w25', cls:'12', num:'25', title:'Kommunikation – Grundlagen', sub:'Begriffe + Organon-Modell Bühler + Funktionen',
+ov:`<div class="slabel">Grundbegriffe (Lehrplan!)</div>
+<p><strong>Soziale Kommunikation</strong> = Austausch von Informationen zwischen min. 2 Personen über Zeichen/Symbole</p>
+<p><strong>Soziale Interaktion</strong> = wechselseitiges aufeinander bezogenes Handeln</p>
+<div class="slabel">Organon-Modell (Bühler 1934) – Lehrplan!</div>
+<table class="tbl"><tr><th>Funktion</th><th>Bezug</th><th>Beispiel</th></tr>
+<tr><td><strong>Ausdruck</strong></td><td>Sender → Zeichen</td><td>Gefühle ausdrücken</td></tr>
+<tr><td><strong>Appell</strong></td><td>Empfänger ← Zeichen</td><td>Aufforderung</td></tr>
+<tr><td><strong>Darstellung</strong></td><td>Zeichen → Gegenstand</td><td>Information übermitteln</td></tr></table>`,
+dt:`<div class="slabel">Bühlers Organon-Modell – Vertiefung</div>
+<p>Karl Bühler (1934): Sprache hat drei Grundfunktionen – Ausdruck (Symptom), Appell (Signal), Darstellung (Symbol).</p>
+<div class="slabel">Kommunikation als Grundlage menschlicher Kultur</div>
+<ul><li>Ermöglicht soziale Koordination</li><li>Überträgt Kultur und Wissen</li><li>Grundlage von Erziehung und Sozialisation</li></ul>
+<div class="slabel">Kommunikation und digitale Medien (Lehrplan!)</div>
+<p>Besonderheiten: Fehlende Mimik/Gestik, Zeitverzögerung, Anonymität</p>
+<p>Risiken: Cybermobbing, Datenmissbrauch, Missbrauch der Anonymität, Vernachlässigung realer Beziehungen</p>
+<div class="box amber">⚠️ Interkulturelle Kommunikation: Unterschiedliche verbale/nonverbale Codes, Begrüßungsrituale, Nähe/Distanz, Werte</div>`},
+
+{id:'w26', cls:'12', num:'26', title:'Watzlawick – 5 Axiome', sub:'Kommunikationstheorie + Störungen',
+ov:`<div class="slabel">Die 5 Axiome</div>
+<table class="tbl"><tr><th>Nr.</th><th>Axiom</th></tr>
+<tr><td>1</td><td>Man kann nicht NICHT kommunizieren</td></tr>
+<tr><td>2</td><td>Inhalts- + Beziehungsaspekt (BA bestimmt IA)</td></tr>
+<tr><td>3</td><td>Interpunktion – Wer hat angefangen?</td></tr>
+<tr><td>4</td><td>Digital (Worte) + Analog (Körper)</td></tr>
+<tr><td>5</td><td>Symmetrisch oder komplementär</td></tr></table>
+<div class="box amber">⚠️ Axiom 2: Beziehungsaspekt bestimmt Inhaltsaspekt!</div>`,
+dt:`<div class="slabel">Kommunikationsstörungen je Axiom (Lehrplan!)</div>
+<table class="tbl"><tr><th>Axiom</th><th>Störung</th></tr>
+<tr><td>1</td><td>Abweisung, widerwillige Annahme, Entwertung, Symptom als Kommunikation</td></tr>
+<tr><td>2</td><td>Uneinigkeit auf Inhalts- oder Beziehungsebene, Konfusion zwischen Aspekten, Beziehungsblindheit</td></tr>
+<tr><td>3</td><td>Widersprüchliche Interpunktion, selbsterfüllende Prophezeiung, Druck und Zwang</td></tr>
+<tr><td>4</td><td>Mehrdeutigkeit analog/digital, Nicht-Übereinstimmung, Überwiegen einer Modalität</td></tr>
+<tr><td>5</td><td>Symmetrische Eskalation, starre Komplementarität</td></tr></table>
+<div class="slabel">Gelungene Kommunikation auf Basis Watzlawicks</div>
+<ul><li>Metakommunikation einsetzen (über Kommunikation reden)</li><li>Interpunktionsmuster erkennen und durchbrechen</li><li>Beziehungsebene bewusst gestalten</li></ul>
+<div class="slabel">Teufelskreis (Axiom 3)</div>
+<p>A zieht sich zurück → B nörgelt → A zieht sich mehr zurück → B nörgelt mehr…<br>Ausstieg: Metakommunikation!</p>`},
+
+{id:'w27', cls:'12', num:'27', title:'Kommunikationstechniken', sub:'Metakommunikation + Ich-Botschaften + Aktives Zuhören + Feedback',
+ov:`<div class="slabel">Techniken (Lehrplan!)</div>
+<table class="tbl"><tr><th>Technik</th><th>Kurzform</th></tr>
+<tr><td><strong>Metakommunikation</strong></td><td>Über die Kommunikation reden</td></tr>
+<tr><td><strong>Ich-Botschaft</strong></td><td>„Ich fühle..." statt „Du machst..."</td></tr>
+<tr><td><strong>Aktives Zuhören</strong></td><td>Paraphrase + Verbalisieren + Nachfragen</td></tr>
+<tr><td><strong>Feedback</strong></td><td>Konkret, sachlich, zeitnah, ich-bezogen</td></tr></table>
+<div class="box green">✅ Ich-Botschaft = kein Vorwurf, mehr Dialog!</div>`,
+dt:`<div class="slabel">Metakommunikation</div>
+<p>Kommunizieren über die Kommunikation selbst. Löst Teufelskreise und klärt Missverständnisse.</p>
+<p>Beispiel: „Ich merke, wir reden gerade aneinander vorbei – können wir kurz innehalten?"</p>
+<div class="slabel">Ich-Botschaften vs. Du-Botschaften</div>
+<table class="tbl"><tr><th>Du-Botschaft ❌</th><th>Ich-Botschaft ✅</th></tr>
+<tr><td>„Du hörst nie zu!"</td><td>„Ich fühle mich übergangen, wenn ich unterbrochen werde."</td></tr>
+<tr><td>Anklagend, defensiv</td><td>Offen, nicht angreifend</td></tr></table>
+<div class="slabel">Aktives Zuhören (Rogers-basiert)</div>
+<table class="tbl"><tr><th>Element</th><th>Was?</th><th>Beispiel</th></tr>
+<tr><td><strong>Paraphrase</strong></td><td>Inhalt wiederholen</td><td>„Du meinst also..."</td></tr>
+<tr><td><strong>Verbalisieren</strong></td><td>Gefühle ansprechen</td><td>„Das klingt frustrierend."</td></tr>
+<tr><td><strong>Nachfragen</strong></td><td>Verständnis sichern</td><td>„Was meinst du genau?"</td></tr>
+<tr><td><strong>Schweigen</strong></td><td>Raum geben</td><td>(bewusstes Nicht-Eingreifen)</td></tr></table>
+<div class="slabel">Feedback-Regeln</div>
+<div class="chips"><span class="chip b">Ich-Form</span><span class="chip b">Konkret</span><span class="chip b">Zeitnah</span><span class="chip b">Sachlich</span><span class="chip b">Veränderbar</span></div>
+<div class="slabel">Interkulturelle Kommunikation</div>
+<p>Unterschiedliche Werte, Normen (z.B. Gleichbehandlung), nonverbale Codes (Augenkontakt, Nähe), Begrüßungsrituale – sensibel beachten!</p>`}
+];
+
+// ═══════════════════════════════════════════════════════════════════
+// DEFINITIONEN QUIZ (Input-Type)
+// ═══════════════════════════════════════════════════════════════════
+const defQ = [
+  {tid:'w01', term:'Falsifizierbarkeit', ans:'Eigenschaft einer wissenschaftlichen Theorie, durch Beobachtung oder Experiment widerlegbar zu sein. Nicht-falsifizierbare Aussagen sind keine Wissenschaft (Popper).'},
+  {tid:'w02', term:'Wahrnehmung (Definition)', ans:'Aktiver Konstruktionsprozess, bei dem das Gehirn Sinnesreize unter Einfluss biologischer, psychologischer und soziokultureller Faktoren zu einem subjektiven Bild der Wirklichkeit verarbeitet (Zimbardo: Empfangen → Auswählen → Organisieren).'},
+  {tid:'w03', term:'Episodisches Gedächtnis', ans:'Langzeitspeicher für persönliche Erlebnisse mit Ort- und Zeitbezug (z.B. Urlaub, erster Schultag). Teil der Langzeitspeicher nach Markowitsch.'},
+  {tid:'w03', term:'Elaboriertes Lernen', ans:'Lernstrategie, bei der neue Informationen tief verarbeitet und mit Vorwissen vernetzt werden – führt zu besserem Langzeitbehalten als oberflächliches Wiederholen.'},
+  {tid:'w04', term:'Emotionsregulation', ans:'Strategien zur bewussten oder unbewussten Steuerung von Emotionen. Methoden: kognitive Umbewertung (Reframing), behavioral (Sport), sozial (Unterstützung). Ziel: Steuerung, nicht Unterdrücken (Suppression ist langfristig schädlich).'},
+  {tid:'w05', term:'Rubikon-Modell', ans:'Modell von Heckhausen & Gollwitzer: Zeigt wie aus Wünschen Handlungen werden. Phasen: Prädezisional (Abwägen, offener Geist) → Rubikon (Entscheidung/Commitment) → Präaktional (Planen) → Aktional (Handeln) → Postaktional (Bewerten).'},
+  {tid:'w05', term:'Intrinsische Motivation', ans:'Antrieb von innen – aus Interesse, Freude oder Neugier an der Tätigkeit selbst. Stabiler und nachhaltiger als extrinsische Motivation (von außen: Belohnung, Druck). Korrumpierungseffekt: externe Belohnung senkt intrinsische Motivation!'},
+  {tid:'w06', term:'Zürcher Ressourcen Modell (ZRM)', ans:'Ansatz von Maja Storch & Frank Krause: Aktivierung innerer Ressourcen über emotionale Motto-Ziele (z.B. „Ich bin wie ein Baum im Sturm"). Körpersignale als Wegweiser. Verbindet Emotion, Kognition und Motivation zur Stärkung der Selbststeuerung.'},
+  {tid:'w07', term:'Sozialintegrativer Erziehungsstil (Tausch/Tausch)', ans:'Erziehungsstil nach Tausch/Tausch: hohe emotionale Wärme + klare Grenzen + Begründungen. Führt zu Selbstständigkeit, sozialer Kompetenz und stabiler Persönlichkeit. Gilt als ideal (im Unterschied zu autoritär und laissez-faire).'},
+  {tid:'w07', term:'Pädagogische Mündigkeit', ans:'Übergreifendes Erziehungs- und Bildungsziel: Fähigkeit zum selbstständigen Denken, Urteilen und verantwortungsvollen Handeln. Nach Kant: Ausgang des Menschen aus seiner selbstverschuldeten Unmündigkeit. Nach Roth: Selbst-, Sach- und Sozialkompetenz.'},
+  {tid:'w09', term:'Klassisches Konditionieren', ans:'Lernform nach Pawlow: Durch wiederholte Kopplung eines neutralen Stimulus (CS) mit einem unkonditionierten Stimulus (UCS) wird der CS allein befähigt, eine konditionierte Reaktion (CR) auszulösen. Lernen durch Reizverknüpfung ohne Einsicht.'},
+  {tid:'w09', term:'Extinktion (Klass. Konditionieren)', ans:'Erlöschen der konditionierten Reaktion (CR), wenn der konditionierte Stimulus (CS) wiederholt ohne den unkonditionierten Stimulus (UCS) präsentiert wird. Spontanerholung: CR kann nach Pause kurz zurückkehren.'},
+  {tid:'w10', term:'Positive Verstärkung (Skinner)', ans:'Einem Verhalten wird ein angenehmer Reiz hinzugefügt → Verhalten wird häufiger (z.B. Lob nach erwünschtem Verhalten). Positiv = hinzufügen (NICHT = gut). Verstärkung = Verhalten nimmt zu.'},
+  {tid:'w10', term:'Shaping', ans:'Methode des operanten Konditionierens: Schrittweise Annäherung an das Zielverhalten durch Verstärkung jeder Annäherung. Wird eingesetzt wenn das Zielverhalten noch nicht vorhanden ist.'},
+  {tid:'w11', term:'Selbstwirksamkeitserwartung (Bandura)', ans:'Situationsspezifische Überzeugung, eine bestimmte Aufgabe erfolgreich ausführen zu können. Wichtigste Quelle: eigene Erfolgserfahrungen. Entscheidend für Motivation, Ausdauer und Resilienz.'},
+  {tid:'w11', term:'Reziproker Determinismus', ans:'Grundannahme von Bandura: Person (Kognitionen, Überzeugungen), Verhalten und Umwelt beeinflussen sich gegenseitig – keine Einbahnstraße.'},
+  {tid:'w13', term:'Selbststeuerung (Entwicklungsbedingung)', ans:'Neben Anlage und Umwelt die dritte Entwicklungsbedingung im Lehrplan: Menschen gestalten ihre Entwicklung aktiv mit durch eigene Entscheidungen, Ziele und Reflexion.'},
+  {tid:'w14', term:'Psychoanalytische Abwehr', ans:'Unbewusste Ich-Funktionen zur Reduktion von Angst bei Konflikten zwischen Es, Ich und Über-Ich. Lehrplan-Mechanismen: Verdrängung, Projektion, Fixierung, Regression, Identifikation.'},
+  {tid:'w14', term:'Ödipuskomplex (Freud)', ans:'Konflikt in der phallischen Phase (3–6 J.): Unbewusste Zuneigung zum gegengeschlechtlichen Elternteil und Rivalitätsgefühle gegenüber dem gleichgeschlechtlichen. Gelöst durch Identifikation mit dem gleichgeschlechtlichen Elternteil.'},
+  {tid:'w15', term:'Sichere Bindung', ans:'Bindungstyp B nach Ainsworth: Kind protestiert bei Trennung, beruhigt sich aber schnell bei Rückkehr der Bezugsperson. Entsteht durch feinfühlige, konsistente Bezugsperson. Wichtigster Schutzfaktor für Resilienz.'},
+  {tid:'w15', term:'Feinfühligkeit (Bindung)', ans:'Fähigkeit der Bezugsperson, Signale des Kindes wahrzunehmen, richtig zu interpretieren und angemessen und prompt darauf zu reagieren. Wichtigste Voraussetzung für sichere Bindung.'},
+  {tid:'w17', term:'Resilienz', ans:'Psychische Widerstandsfähigkeit: Fähigkeit, trotz widriger Bedingungen, Stress oder Krisen eine positive Entwicklung zu nehmen. Schutzfaktoren: soziale Unterstützung, positive Peerkontakte, Selbstwertgefühl, Selbstwirksamkeitserwartungen. Erlernbar – nicht angeboren!'},
+  {tid:'w18', term:'Big Five / OCEAN', ans:'Fünf-Faktoren-Modell der Persönlichkeit (Costa & McCrae): Offenheit, Gewissenhaftigkeit (Conscientiousness), Extraversion, Verträglichkeit (Agreeableness), Neurotizismus. Merkmale: Stabilität, Veränderbarkeit, Einzigartigkeit.'},
+  {tid:'w19', term:'Kongruenz (Rogers)', ans:'Übereinstimmung zwischen Selbstkonzept und Erfahrungen SOWIE zwischen Real- und Idealselbst. Kongruenz = psychisch gesund. Inkongruenz = Diskrepanz → Angst, Abwehrmechanismen.'},
+  {tid:'w19', term:'Aktualisierungstendenz (Rogers)', ans:'Angeborener Drang aller lebenden Organismen, ihre Anlagen zu entfalten und zu wachsen. Beim Menschen: bezieht sich auf das Selbst (Selbstaktualisierung). Zentrale Annahme der personenzentrierten Theorie.'},
+  {tid:'w21', term:'Erarbeitete Identität (Marcia)', ans:'Höchster Identitätsstatus: Krise (aktive Auseinandersetzung) wurde durchlebt UND eigenständiges Commitment (Verpflichtung) wurde gefunden. Ergebnis persönlicher Reflexion und Entscheidung.'},
+  {tid:'w22', term:'Verhaltensorientiertes Konzept (Einzelhilfe)', ans:'Handlungskonzept der Sozialen Arbeit auf Basis von Lerntheorien: 1. Analyse (Problem beschreiben), 2. Planung (Ziel + Methode), 3. Verhaltensmodifikation (Verstärkung, Modelllernen), 4. Evaluation (Erfolg messen).'},
+  {tid:'w23', term:'Coping (Life Model)', ans:'Bewältigungsstrategien im Life Model von Germain & Gitterman: Problemorientiert (Ursache bekämpfen), emotionsorientiert (Gefühle regulieren), ressourcenorientiert (Stärken nutzen). Ziel: Anpassung verbessern.'},
+  {tid:'w23', term:'Transaktion (Life Model)', ans:'Wechselseitiger Anpassungsprozess zwischen Mensch und Umwelt – beide beeinflussen sich gegenseitig. Kernbegriff des Life Models (Germain/Gitterman).'},
+  {tid:'w24', term:'Lebenswelt (Thiersch)', ans:'Die alltägliche, selbstverständliche Welt, in der Menschen leben – geprägt durch Routinen, soziale Bezüge, Deutungen. Wird analysiert nach: erfahrene Zeit, erfahrener Raum, soziale Bezüge, Bewältigungsaufgaben, gesellschaftliche Bedingungen.'},
+  {tid:'w25', term:'Organon-Modell (Bühler)', ans:'Kommunikationsmodell von Karl Bühler (1934): Sprache hat drei Funktionen: Ausdruck (Sender → Zeichen, Symptom), Appell (Zeichen → Empfänger, Signal), Darstellung (Zeichen → Sachverhalt, Symbol).'},
+  {tid:'w26', term:'Axiom 2 (Watzlawick)', ans:'Jede Kommunikation hat einen Inhaltsaspekt (WAS) und einen Beziehungsaspekt (WIE, in welchem Verhältnis). Der Beziehungsaspekt bestimmt, wie der Inhaltsaspekt verstanden wird. Störung: Uneinigkeit auf Beziehungsebene.'},
+  {tid:'w27', term:'Metakommunikation', ans:'Kommunizieren über die Kommunikation selbst – auf einer anderen Ebene über den Kommunikationsprozess sprechen. Wichtige Technik zur Lösung von Missverständnissen und Teufelskreisen.'}
+];
+
+// ═══════════════════════════════════════════════════════════════════
+// VERSTÄNDNISFRAGEN (MC) – 2 pro Thema
+// ═══════════════════════════════════════════════════════════════════
+const mcQ = [
+  {tid:'w01',q:'Was unterscheidet eine wissenschaftliche Theorie von einer Alltagstheorie?',opts:['Wissenschaftliche Theorien sind einfacher zu verstehen','Wissenschaftliche Theorien sind falsifizierbar und systematisch überprüfbar','Alltagstheorien sind immer falsch','Wissenschaftliche Theorien brauchen keine Beweise'],c:1,exp:'Falsifizierbarkeit (Widerlegbarkeit) + systematische Überprüfung = Kernmerkmale wissenschaftlicher Theorie.'},
+  {tid:'w01',q:'Welches ist ein Beispiel für eine Alltagstheorie?',opts:['Die Lerntheorie von Pawlow','„Wenn jemand lügt, schaut er weg" – aus persönlicher Erfahrung','Das Rubikon-Modell von Heckhausen','Die Big Five nach Costa & McCrae'],c:1,exp:'Alltagstheorien entstehen aus persönlicher Erfahrung, sind subjektiv und nicht systematisch überprüft.'},
+  {tid:'w02',q:'Was beschreibt das dreistufige Modell der Wahrnehmung nach Zimbardo?',opts:['Empfangen → Speichern → Vergessen','Empfangen → Auswählen → Organisieren/Interpretieren','Reiz → Reaktion → Verstärkung','Sehen → Hören → Fühlen'],c:1,exp:'Zimbardo: 1. Empfangen (Sinnesorgane), 2. Auswählen (Selektion), 3. Organisieren & Interpretieren.'},
+  {tid:'w02',q:'Welcher Faktor beeinflusst die Wahrnehmung von INNEN (psychologisch)?',opts:['Helligkeit des Raums','Lautstärke des Reizes','Emotionale Zustände, Erfahrungen, Motivation','Kulturelle Normen der Gesellschaft'],c:2,exp:'Psychologische Einflussfaktoren (von innen): Erfahrungen, Emotionen, Motivation, Erwartungen.'},
+  {tid:'w03',q:'Welches Gedächtnissystem ist für persönliche Erlebnisse zuständig?',opts:['Semantisches Gedächtnis','Prozedurales Gedächtnis','Episodisches Gedächtnis','Priming'],c:2,exp:'Episodisch = persönliche Erlebnisse mit Ort und Zeit. Semantisch = Fakten. Prozedural = Fähigkeiten.'},
+  {tid:'w03',q:'Was versteht man unter „elaboriertem Lernen"?',opts:['Möglichst viel in kurzer Zeit wiederholen','Inhalte tief verarbeiten und mit Vorwissen vernetzen','Nur das Wichtigste auswendig lernen','Lernen ohne Pause'],c:1,exp:'Elaboration = tiefe Verarbeitung, Vernetzung mit Vorwissen → besseres Langzeitbehalten.'},
+  {tid:'w04',q:'Welche Emotionsregulationsstrategie ist langfristig am schädlichsten?',opts:['Kognitive Umbewertung (Reframing)','Soziale Unterstützung','Suppression (Unterdrücken)','Sport treiben'],c:2,exp:'Suppression = Emotion verbergen. Kurzfristig OK, langfristig schädlich für psychische Gesundheit.'},
+  {tid:'w04',q:'Was sind die 4 Komponenten einer Emotion?',opts:['Denken, Wahrnehmen, Handeln, Erinnern','Körperlich, Subjektiv, Expressiv-motorisch, Kognitiv-bewertend','Angst, Freude, Wut, Trauer','Verstärkung, Bestrafung, Löschung, Generaliserung'],c:1,exp:'Lehrplan: Körperlich-physiologisch + subjektiv-erlebend + expressiv-motorisch + kognitiv-bewertend.'},
+  {tid:'w05',q:'In welcher Phase des Rubikon-Modells ist der Geist offen und wägt Vor- und Nachteile ab?',opts:['Aktional','Postaktional','Prädezisional','Präaktional'],c:2,exp:'Prädezisional = VOR dem Rubikon: offen, abwägend. Nach dem Rubikon: planend/handlungsorientiert.'},
+  {tid:'w05',q:'Was besagt der Korrumpierungseffekt?',opts:['Externe Belohnung steigert immer die Motivation','Intrinsische Motivation sinkt wenn eine intrinsisch motivierte Tätigkeit extern belohnt wird','Bestrafung ist wirksamer als Belohnung','Extrinsische Motivation ist stabiler'],c:1,exp:'Korrumpierungseffekt: Externe Belohnung für intrinsisch motivierte Tätigkeiten mindert die innere Motivation.'},
+  {tid:'w06',q:'Was sind Motto-Ziele im ZRM?',opts:['Konkrete Muss-Ziele mit Deadline','Emotionale Bilder oder Metaphern als innerer Anker','Negative Antriebe die gemieden werden','Rationale Pläne ohne emotionalen Bezug'],c:1,exp:'Motto-Ziele sprechen das emotionale System an und erzeugen mehr Energie als reine Muss-Vorsätze.'},
+  {tid:'w06',q:'Von wem stammt das Zürcher Ressourcen Modell?',opts:['Heckhausen & Gollwitzer','Marcia & Erikson','Storch & Krause','Watzlawick & Bühler'],c:2,exp:'ZRM wurde von Maja Storch und Frank Krause an der Universität Zürich entwickelt.'},
+  {tid:'w07',q:'Welcher Erziehungsstil nach Tausch/Tausch gilt laut Lehrplan Bayern als optimal?',opts:['Autoritär','Laissez-faire','Sozialintegrativ','Permissiv'],c:2,exp:'Sozialintegrativ (Tausch/Tausch) = hohe Wärme + klare Grenzen + Begründungen → optimal.'},
+  {tid:'w07',q:'Was beschreibt pädagogische Mündigkeit nach Heinrich Roth?',opts:['Gehorsam ohne Fragen','Selbst-, Sach- und Sozialkompetenz als Erziehungsziel','Schulreife erreichen','Prüfungen erfolgreich bestehen'],c:1,exp:'Roth: Mündigkeit = Selbst- + Sach- + Sozialkompetenz. Kant: Ausgang aus selbstverschuldeter Unmündigkeit.'},
+  {tid:'w08',q:'Was ist der Dreifachauftrag der Kindertageseinrichtung?',opts:['Lernen, Spielen, Schlafen','Bildung, Erziehung, Betreuung','Motorik, Sprache, Kognition','Fördern, Fordern, Betreuen'],c:1,exp:'§22 SGB VIII: Bildung + Erziehung + Betreuung – gleichrangige Aufgaben der Kita.'},
+  {tid:'w08',q:'Was ist der BayBEP?',opts:['Ein Kindergartenlehrplan für Mathematik','Der Bayerische Bildungs- und Erziehungsplan – gesetzliche Grundlage für alle Kitas in Bayern','Ein Test zur Sprachentwicklung','Ein Förderprogramm für benachteiligte Kinder'],c:1,exp:'BayBEP = Bayerischer Bildungs- und Erziehungsplan – definiert Förderbereiche für Kitas in Bayern.'},
+  {tid:'w09',q:'Was passiert bei der Extinktion im klassischen Konditionieren?',opts:['CS wird verstärkt','Der CR erlischt wenn CS wiederholt ohne UCS präsentiert wird','UCS wird entfernt','Neue CS werden hinzugefügt'],c:1,exp:'Extinktion: CS oft ohne UCS → CR erlischt. Spontanerholung möglich nach Pause!'},
+  {tid:'w09',q:'Was ist die kognitive Wende in der Psychologie?',opts:['Wechsel von Pädagogik zu Psychologie','Abkehr vom Behaviorismus – Mensch als aktiver Informationsverarbeiter statt Reiz-Reaktions-Automat','Einführung der Psychoanalyse','Entdeckung des klassischen Konditionierens'],c:1,exp:'Kognitive Wende: Innere mentale Prozesse (Denken, Planen) rücken in den Fokus – gegen Behaviorismus.'},
+  {tid:'w10',q:'Welcher Verstärkerplan ist am schwierigsten zu löschen?',opts:['Kontinuierlicher Plan','Fester Intervall','Variabler Intervall','Variables Verhältnis'],c:3,exp:'Variables Verhältnis = nach wechselnder Anzahl von Reaktionen. Sehr löschresistent – wie Glücksspiel!'},
+  {tid:'w10',q:'Was sind die 4 Schritte des verhaltensorientierten Konzepts (Einzelhilfe)?',opts:['Beobachten, Verstehen, Handeln, Reflektieren','Analyse, Planung, Verhaltensmodifikation, Evaluation','Diagnose, Therapie, Nachsorge, Prävention','Erziehung, Bildung, Beratung, Vernetzung'],c:1,exp:'Lehrplan: Analyse → Planung → Verhaltensmodifikation → Evaluation – auf Basis von Lerntheorien.'},
+  {tid:'w11',q:'Was zeigte Banduras Bobo-Doll-Experiment 1961?',opts:['Kinder lernen nur durch direkte Erfahrung','Kinder ahmen aggressives Verhalten durch Beobachtung nach – auch ohne direkte Verstärkung','Selbstwirksamkeit entsteht durch Misserfolge','Belohnung ist immer nötig für Lernen'],c:1,exp:'Bobo-Doll: Kinder ahmten Aggression nach ohne selbst belohnt zu werden → Beweis für Beobachtungslernen.'},
+  {tid:'w11',q:'Was ist die stärkste Quelle von Selbstwirksamkeit?',opts:['Verbale Ermutigung durch andere','Beobachten wie andere es schaffen','Eigene Erfolgserfahrungen','Positive physiologische Zustände'],c:2,exp:'Eigene Erfolgserfahrungen sind die stärkste Quelle – sie zeigen direkt: Ich kann es schaffen!'},
+  {tid:'w12',q:'Was unterscheidet Handlung von Verhalten?',opts:['Verhalten ist beobachtbar, Handlung nicht','Handlung ist bewusst, zielgerichtet und verantwortbar – Verhalten ist reaktiv','Es gibt keinen Unterschied','Handlungen sind immer körperlich, Verhalten nicht'],c:1,exp:'Handlung = bewusst, zielgerichtet, intentional, verantwortbar. Verhalten = reaktiv, nicht zwingend bewusst.'},
+  {tid:'w12',q:'Welche kognitive Erscheinung entsteht wenn Wissen und Verhalten im Widerspruch stehen?',opts:['Kognitive Elaboration','Kognitive Dissonanz','Metakognition','Kognitive Wende'],c:1,exp:'Kognitive Dissonanz: Widerspruch zwischen Einstellungen/Verhalten → Unbehagen → Drang zur Auflösung.'},
+  {tid:'w13',q:'Welche 3 Entwicklungsbedingungen nennt der Lehrplan Bayern explizit?',opts:['Gene, Hormone, Umwelt','Anlage, Umwelt, Selbststeuerung','Erziehung, Bildung, Sozialisation','Bindung, Trauma, Resilienz'],c:1,exp:'Lehrplan Kl.12: Anlage (Gene/Biologie), Umwelt (Familie/Erfahrungen), Selbststeuerung (eigene Entscheidungen).'},
+  {tid:'w13',q:'Was zeigt die Epigenetik in Bezug auf Anlage und Umwelt?',opts:['Gene bestimmen alles','Umwelt hat keinen Einfluss auf Gene','Umwelteinflüsse können Gene an- und ausschalten','Gene und Umwelt sind völlig unabhängig'],c:2,exp:'Epigenetik: Umwelteinflüsse können Gene aktivieren oder deaktivieren – Gene sind kein starres Schicksal.'},
+  {tid:'w14',q:'Welche Abwehrmechanismen nennt der bayerische Lehrplan explizit?',opts:['Rationalisierung, Sublimierung, Reaktionsbildung, Kompensation','Verdrängung, Projektion, Fixierung, Regression, Identifikation','Verleugnung, Isolation, Ungeschehenmachen, Altruismus','Spaltung, Projektion, Introjektion, Identifikation'],c:1,exp:'Lehrplan FOS 12: Verdrängung, Projektion, Fixierung, Regression, Identifikation.'},
+  {tid:'w14',q:'Was ist das topografische Modell bei Freud?',opts:['Einteilung der Psyche in Es, Ich und Über-Ich','Einteilung in Bewusst, Vorbewusst und Unbewusst','Die 5 psychosexuellen Phasen','Die Triebe Eros und Thanatos'],c:1,exp:'Topografisches Modell = Eisberg: Bewusst (Spitze), Vorbewusst, Unbewusst (Basis). Vom Instanzenmodell unterscheiden!'},
+  {tid:'w15',q:'Was ist Feinfühligkeit in der Bindungsforschung?',opts:['Kind immer beschützen und begleiten','Signale des Kindes wahrnehmen, richtig deuten und angemessen reagieren','Viele Entwicklungsangebote machen','Strikte Regeln einhalten'],c:1,exp:'Feinfühligkeit (Ainsworth): Signale wahrnehmen → richtig interpretieren → prompt + angemessen reagieren.'},
+  {tid:'w15',q:'Was beschreibt Ahnert zu primären und sekundären Bindungsbeziehungen?',opts:['Primär = Erzieherin, sekundär = Eltern','Primär = Eltern (frühe Kindheit), sekundär = Erzieher/Lehrer/Peers (later)','Beide sind gleich wichtig','Sekundäre Bindungen ersetzen primäre'],c:1,exp:'Ahnert (Lehrplan): Primär = Eltern (frühe Kindheit). Sekundär = Erzieher, Lehrkräfte, Peers (entstehen später).'},
+  {tid:'w16',q:'Was ist Multidirektionalität in Baltes Lebensspannentheorie?',opts:['Entwicklung verläuft nur nach vorne','Entwicklung beinhaltet gleichzeitig Gewinne und Verluste','Alle Menschen entwickeln sich gleich','Entwicklung endet mit dem Erwachsenenalter'],c:1,exp:'Baltes: Multidirektional = gleichzeitige Gewinne (z.B. Weisheit) und Verluste (z.B. Reaktionsgeschwindigkeit).'},
+  {tid:'w16',q:'Welche zwei Lebensbereiche nennt der Lehrplan Bayern beim Thema Entwicklungsaufgaben?',opts:['Kindheit und Alter','Jugend (11–18 J.) und frühes Erwachsenenalter (18–28 J.)','Kleinkind- und Schulalter','Pubertät und Rentenalter'],c:1,exp:'Lehrplan Kl. 12: Jugend (ca. 11–18 J.) und frühes Erwachsenenalter (ca. 18–28 J.).'},
+  {tid:'w17',q:'Welche Schutzfaktoren nennt der Lehrplan Bayern explizit bei Resilienz?',opts:['IQ, Schulnoten, Einkommen der Eltern','Soziale Unterstützung, positive Peerkontakte, Selbstwertgefühl, Selbstwirksamkeitserwartungen','Sport, gesunde Ernährung, ausreichend Schlaf','Bildung, Einkommen, Wohnort'],c:1,exp:'Lehrplan FOS 12: Soziale Unterstützung + positive Peerkontakte + Selbstwertgefühl + Selbstwirksamkeit.'},
+  {tid:'w17',q:'Was zeigte die Kauai-Studie (Emmy Werner)?',opts:['Alle Risikokinder entwickeln sich schlecht','1/3 der Hochrisikokinder entwickelte sich trotz Widrigkeiten positiv – Resilienz ist real und förderbar','Resilienz ist ausschließlich genetisch','Armut macht immer krank'],c:1,exp:'Kauai-Studie: Resilienz ist möglich und erlernbar – 1/3 der Hochrisikokinder entwickelte sich positiv.'},
+  {tid:'w18',q:'Welche 3 zentralen Merkmale von Persönlichkeit nennt der Lehrplan Bayern?',opts:['Temperament, Charakter, Intelligenz','Stabilität, Veränderbarkeit, Einzigartigkeit','Extraversion, Verträglichkeit, Offenheit','Stärken, Schwächen, Potenziale'],c:1,exp:'Lehrplan Kl. 12: Persönlichkeitsmerkmale = Stabilität (über Zeit), Veränderbarkeit, Einzigartigkeit.'},
+  {tid:'w18',q:'Was sind Verhaltensdispositionen bei den Big Five?',opts:['Feste, unveränderliche Verhaltensweisen','Tendenzen in bestimmten Situationen auf bestimmte Weise zu reagieren','Kurzfristige Stimmungen','Gelerntes Verhalten aus der Kindheit'],c:1,exp:'Verhaltensdispositionen = stabile Tendenzen (kein Automatismus). Jede Big-Five-Dimension ist ein Spektrum.'},
+  {tid:'w19',q:'Was ist der organismische Bewertungsprozess (Rogers)?',opts:['Bewusste Entscheidung was gut oder schlecht ist','Innere Instanz die Erfahrungen danach bewertet ob sie die Aktualisierung fördern oder hemmen','Gesellschaftliche Normen internalisieren','Feedback von anderen verarbeiten'],c:1,exp:'Organismsicher Bewertungsprozess: Innere Instanz bewertet Erfahrungen nach ihrem Beitrag zur Aktualisierung.'},
+  {tid:'w19',q:'Was führt laut Rogers zu Inkongruenz?',opts:['Zu viel Freiheit in der Kindheit','Bedingte Wertschätzung – Zuneigung hängt von Bedingungen ab','Zu strenge Erziehung','Übermäßige Selbstreflexion'],c:1,exp:'Bedingte Wertschätzung → Kind verleugnet eigene Gefühle um geliebt zu werden → Inkongruenz.'},
+  {tid:'w20',q:'Was unterscheidet Selbstwirksamkeitserwartung von Ergebniserwartung (Bandura)?',opts:['Kein Unterschied','SW = Ich kann es, EW = Wenn ich X tue, passiert Y','SW = langfristig, EW = kurzfristig','SW = angeboren, EW = erlernt'],c:1,exp:'Selbstwirksamkeit = „Ich schaffe es". Ergebniserwartung = „Wenn ich X tue, kommt Y heraus" – unterschiedliche Überzeugungen!'},
+  {tid:'w21',q:'Was kennzeichnet das Moratorium bei Marcia?',opts:['Keine Krise, keine Entscheidung','Entscheidung von Eltern übernommen','Aktive Krise, noch keine stabile Entscheidung – Phase des Suchens','Krise durchlebt und eigene Entscheidung getroffen'],c:2,exp:'Moratorium = aktive Auseinandersetzung + noch kein Commitment. Positiv! Besser als Diffusion.'},
+  {tid:'w21',q:'Welche Identitätsbereiche nennt der Lehrplan Bayern als Beispiele?',opts:['Politisch, religiös, sportlich','Sexuelle, ethnische oder berufliche Identität','Schulische und berufliche Identität','Nur berufliche Identität'],c:1,exp:'Lehrplan: sexuelle, ethnische oder berufliche Identität als Beispiele für Identitätsbereiche im Jugendalter.'},
+  {tid:'w22',q:'Welche 3 Aufgabenbereiche Sozialer Arbeit nennt der Lehrplan Bayern?',opts:['Schule, Klinik, Gericht','Sozialhilfe, Gesundheits- und Altenhilfe, Kinder- und Jugendhilfe','Prävention, Rehabilitation, Nachsorge','Beratung, Therapie, Krisenintervention'],c:1,exp:'Lehrplan Kl. 12: Sozialhilfe + Gesundheits-/Altenhilfe + Kinder- und Jugendhilfe.'},
+  {tid:'w22',q:'Was ist das Ziel des verhaltensorientierten Konzepts in der Sozialen Arbeit?',opts:['Diagnose einer psychischen Störung','Systemische Familientherapie','Verhaltensänderung durch Lerntheorien in 4 Schritten','Lebensweltanalyse nach Thiersch'],c:2,exp:'Verhaltensorientiertes Konzept = Einzelhilfe auf Basis von Lerntheorien: Analyse → Planung → Modifikation → Evaluation.'},
+  {tid:'w23',q:'Was bedeutet „Habitat" im Life Model?',opts:['Der biologische Lebensraum eines Tieres','Die physische und soziale Umgebung des Menschen','Die inneren Ressourcen einer Person','Der soziale Status in einer Gruppe'],c:1,exp:'Habitat (Germain/Gitterman) = physische und soziale Umgebung in der ein Mensch lebt und interagiert.'},
+  {tid:'w23',q:'Was ist das Grundprinzip des Life Models?',opts:['Defizite des Klienten analysieren','Menschen und Umwelt stehen in wechselseitiger Beziehung – Sozialarbeit stärkt Anpassung auf beiden Seiten','Klienten werden therapeutisch behandelt','Gesetze und Regeln durchsetzen'],c:1,exp:'Life Model: Mensch-Umwelt-Transaktion. Sozialarbeit = Anpassung fördern auf Seiten des Menschen UND der Umwelt.'},
+  {tid:'w24',q:'Welche Handlungsmaxime bedeutet, Angebote im Lebenskontext der Menschen anzubieten?',opts:['Prävention','Vernetzung','Alltagsnähe','Partizipation'],c:2,exp:'Alltagsnähe (Thiersch): Hilfe muss an den Alltag der Menschen anknüpfen – nicht von oben aufgezwungen.'},
+  {tid:'w24',q:'Was bedeutet Partizipation als Handlungsmaxime?',opts:['Probleme verhindern bevor sie entstehen','Angebote wohnortnah anbieten','Klienten aktiv in Planung und Entscheidung einbeziehen','Einrichtungen miteinander vernetzen'],c:2,exp:'Partizipation = aktive Einbeziehung der Klienten in Entscheidungs- und Planungsprozesse.'},
+  {tid:'w25',q:'Welche 3 Funktionen hat Sprache nach dem Organon-Modell (Bühler)?',opts:['Informieren, Fragen, Befehlen','Ausdruck (Symptom), Appell (Signal), Darstellung (Symbol)','Senden, Empfangen, Rückmelden','Verbal, Nonverbal, Paraverbal'],c:1,exp:'Bühler: Ausdruck (Sender→Zeichen), Appell (Zeichen→Empfänger), Darstellung (Zeichen→Sachverhalt).'},
+  {tid:'w25',q:'Welche Risiken nennt der Lehrplan bei Kommunikation über digitale Medien?',opts:['Zu langsame Kommunikation','Cybermobbing, Datenmissbrauch, Missbrauch der Anonymität, Vernachlässigung realer Beziehungen','Schlechte Übersetzungen','Zu viele Informationen'],c:1,exp:'Lehrplan: Cybermobbing, Datenmissbrauch, Anonymitätsmissbrauch, Vernachlässigung realer Beziehungen.'},
+  {tid:'w26',q:'Was beschreibt Axiom 3 nach Watzlawick?',opts:['Digital und analog unterscheiden sich','Man kann nicht nicht kommunizieren','Jeder sieht sich als Reaktion auf den anderen – Interpunktionsproblem','Beziehung und Inhalt sind getrennt'],c:2,exp:'Axiom 3: Interpunktion – jeder sieht sein eigenes Verhalten als Reaktion auf den anderen → Teufelskreise.'},
+  {tid:'w26',q:'Was entsteht wenn die digitale und analoge Kommunikation nicht übereinstimmen?',opts:['Symmetrische Eskalation','Starre Komplementarität','Axiom 4 – Störung durch Nicht-Übereinstimmung','Selbsterfüllende Prophezeiung'],c:2,exp:'Axiom 4: Nicht-Übereinstimmung von digital (Worte) und analog (Körper) → Mehrdeutigkeit, Misstrauen.'},
+  {tid:'w27',q:'Was ist Metakommunikation?',opts:['Kommunikation über digitale Medien','Kommunizieren über die Kommunikation selbst','Nonverbale Kommunikation','Kommunikation zwischen Gruppen'],c:1,exp:'Metakommunikation = auf einer anderen Ebene über den Kommunikationsprozess sprechen. Löst Teufelskreise.'},
+  {tid:'w27',q:'Wie lautet eine Ich-Botschaft korrekt formuliert?',opts:['„Du hörst mir nie zu!"','„Es nervt wenn man nicht zuhört."','„Ich fühle mich übergangen wenn ich unterbrochen werde."','„Alle sagen du hörst nie zu."'],c:2,exp:'Ich-Botschaft: Ich-Form + eigenes Gefühl + Situationsbeschreibung. Kein Vorwurf, keine Verallgemeinerung.'}
+];
+
+// ═══════════════════════════════════════════════════════════════════
+// LERNEN – RENDER
+// ═══════════════════════════════════════════════════════════════════
+function renderList() {
+  const lv = document.getElementById('listView');
+  const cls11 = topics.filter(t=>t.cls==='11');
+  const cls12 = topics.filter(t=>t.cls==='12');
+  lv.innerHTML = `
+    <div class="class-label">📘 Klasse 11 – Grundlagen (Lernbereiche 1–4)</div>
+    <div class="tlist">${cls11.map(titem).join('')}</div>
+    <div class="class-label">📙 Klasse 12 – Vertiefung (Lernbereiche 1–4)</div>
+    <div class="tlist">${cls12.map(titem).join('')}</div>
+  `;
+}
+function titem(t) {
+  const d = done.includes(t.id);
+  return `<button class="titem ${d?'done':''}" onclick="openTopic('${t.id}')">
+    <div class="tnum ${d?'done':'c'+t.cls}">${d?'✓':t.num}</div>
+    <div class="ttxt"><div class="ttitle">${t.title}</div><div class="tsub">${t.sub}</div></div>
+    <div class="tarr">${d?'✓':'›'}</div>
+  </button>`;
+}
+
+function openTopic(id) {
+  const t = topics.find(x=>x.id===id);
+  document.getElementById('listView').style.display='none';
+  const dv=document.getElementById('detailView');
+  dv.style.display='block'; dv.className='up';
+  dv.innerHTML=`
+    <button class="backbtn" onclick="closeTopic()">← Zurück</button>
+    <div class="card">
+      <div class="card-head" style="color:var(--c${t.cls})">${t.title}</div>
+      ${t.ov}
+    </div>
+    <button class="dtoggle" id="dtog" onclick="toggleDet()">
+      <span>📖 Ausführliche Details anzeigen</span><span class="arr">▼</span>
+    </button>
+    <div class="dsection" id="dsec">
+      <div class="card" style="border-color:${t.cls==='11'?'#BFDBFE':'#DDD6FE'}">${t.dt}</div>
+    </div>
+    <button class="donebtn ${done.includes(id)?'done':''}" onclick="markDone('${id}',this)">
+      ${done.includes(id)?'✅ Gelernt!':'✅ Als gelernt markieren'}
+    </button>
+  `;
+  window.scrollTo(0,0);
+}
+function toggleDet(){
+  const b=document.getElementById('dtog'), s=document.getElementById('dsec');
+  const o=s.classList.contains('open');
+  s.classList.toggle('open'); b.classList.toggle('open');
+  b.querySelector('span:first-child').textContent=o?'📖 Ausführliche Details anzeigen':'📖 Details ausblenden';
+}
+function closeTopic(){
+  document.getElementById('listView').style.display='block';
+  document.getElementById('detailView').style.display='none';
+  window.scrollTo(0,0);
+}
+function markDone(id,btn){
+  if(done.includes(id))return;
+  done.push(id); pts+=5; save();
+  btn.textContent='✅ Gelernt!'; btn.classList.add('done');
+  renderList(); updH();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// QUIZ SETUP
+// ═══════════════════════════════════════════════════════════════════
+selTids = topics.map(t=>t.id);
+function renderSetup(){
+  document.getElementById('qsetup').innerHTML=`
+    <div class="qsetup-card up">
+      <div class="qsetup-title">🧠 Quiz konfigurieren</div>
+      <div class="slabel">Modus</div>
+      <div class="modebar">
+        <button class="modebtn ${qMode==='def'?'active':''}" onclick="setMode('def')">📝 Definitionen eingeben</button>
+        <button class="modebtn ${qMode==='mc'?'active':''}" onclick="setMode('mc')">❓ Multiple Choice</button>
+      </div>
+      <div class="slabel">Klasse</div>
+      <div class="modebar">
+        <button class="modebtn" onclick="selClass('11')">📘 Nur Klasse 11</button>
+        <button class="modebtn" onclick="selClass('12')">📙 Nur Klasse 12</button>
+        <button class="modebtn" onclick="selClass('all')">📚 Alles</button>
+      </div>
+      <div class="slabel">Themen (${selTids.length} ausgewählt)</div>
+      <div class="tgrid">
+        <button class="tgall ${selTids.length===topics.length?'active':''}" onclick="toggleAll(this)">
+          ${selTids.length===topics.length?'✓ Alle':'Alle auswählen'}
+        </button>
+        ${topics.map(t=>`
+          <button class="tgbtn ${selTids.includes(t.id)?'active':''}" onclick="toggleTid('${t.id}',this)">
+            <span style="opacity:.6;font-size:.65rem">${t.cls}·${t.num}</span><br>${t.title}
+          </button>`).join('')}
+      </div>
+      <button class="startbtn" onclick="startQuiz()">🚀 Starten (${getQCount()} Fragen)</button>
+    </div>`;
+}
+function getQCount(){
+  const pool = qMode==='def' ? defQ : mcQ;
+  return pool.filter(q=>selTids.includes(q.tid)).length;
+}
+function setMode(m){ qMode=m; renderSetup(); }
+function selClass(c){
+  if(c==='all') selTids=topics.map(t=>t.id);
+  else selTids=topics.filter(t=>t.cls===c).map(t=>t.id);
+  renderSetup();
+}
+function toggleTid(id,btn){
+  if(selTids.includes(id)) selTids=selTids.filter(x=>x!==id);
+  else selTids.push(id);
+  renderSetup();
+}
+function toggleAll(btn){
+  if(selTids.length===topics.length) selTids=[];
+  else selTids=topics.map(t=>t.id);
+  renderSetup();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// QUIZ RUN
+// ═══════════════════════════════════════════════════════════════════
+function startQuiz(){
+  const pool=(qMode==='def'?defQ:mcQ).filter(q=>selTids.includes(q.tid));
+  if(!pool.length){alert('Bitte min. ein Thema auswählen!');return;}
+  activeQ=[...pool].sort(()=>Math.random()-.5);
+  qIdx=0; qAnswered=false;
+  document.getElementById('qsetup').style.display='none';
+  document.getElementById('qrun').style.display='block';
+  renderQ();
+}
+function renderQ(){
+  const fill=document.getElementById('qfill');
+  const ctr=document.getElementById('qctr');
+  const ptsEl=document.getElementById('qpts');
+  const card=document.getElementById('qcard');
+  if(qIdx>=activeQ.length){
+    fill.style.width='100%'; ctr.textContent=''; ptsEl.textContent='';
+    card.innerHTML=`<div class="qdone">
+      <div class="qdone-score">${pts} Pkt</div>
+      <div class="qdone-label">Alle ${activeQ.length} Fragen beantwortet 🎉</div>
+      <div class="qactions">
+        <button class="qaction primary" onclick="startQuiz()">🔄 Nochmal</button>
+        <button class="qaction" onclick="backSetup()">⚙️ Konfigurieren</button>
+      </div>
+    </div>`; return;
+  }
+  const q=activeQ[qIdx];
+  const t=topics.find(x=>x.id===q.tid);
+  fill.style.width=(qIdx/activeQ.length*100)+'%';
+  ctr.textContent=`${qIdx+1} / ${activeQ.length}`;
+  ptsEl.textContent=`⭐ ${pts} Pkt`;
+
+  if(qMode==='def'){
+    card.innerHTML=`
+      <div class="qtag c${t.cls}">📘 Klasse ${t.cls} · ${t.title}</div>
+      <div class="qtext">Definiere / erkläre: <strong>${q.term}</strong></div>
+      <textarea class="qinput" id="qin" placeholder="Schreib deine Erklärung hier…"></textarea>
+
+```
+  <button class="qsubmit" onclick="submitDef()">Musterlösung anzeigen</button>
+  <div class="qreveal" id="qrev"><strong>Musterlösung:</strong><br>${q.ans}</div>
+  <div class="selfgrade" id="sgr">
+    <button class="sgbtn y" onclick="sg('y')">✅ Hatte ich (+10)</button>
+    <button class="sgbtn h" onclick="sg('h')">🟡 Teilweise (+5)</button>
+    <button class="sgbtn n" onclick="sg('n')">❌ Noch nicht (0)</button>
+  </div>
+  <button class="qnext" id="qnxt" onclick="nextQ()">Weiter →</button>`;
+```
+
+} else {
+card.innerHTML=` <div class="qtag c${t.cls}">📘 Klasse ${t.cls} · ${t.title}</div> <div class="qtext">${q.q}</div> <div class="qopts">${q.opts.map((o,i)=>`<button class="qopt" onclick="answerMC(${i})">${o}</button>`).join('')}</div> <div class="qfb" id="qfb"></div> <button class="qnext" id="qnxt" onclick="nextQ()">Weiter →</button>`;
+}
+qAnswered=false;
+}
+function submitDef(){
+if(qAnswered)return; qAnswered=true;
+document.querySelector(’.qsubmit’).disabled=true;
+document.getElementById(‘qrev’).classList.add(‘show’);
+document.getElementById(‘sgr’).classList.add(‘show’);
+}
+function sg(grade){
+const gains={y:10,h:5,n:0};
+const labels={y:‘✅ Super! +10 Punkte’,h:‘🟡 Teilweise! +5 Punkte’,n:‘❌ Noch lernen – 0 Punkte’};
+const cls={y:‘ok’,h:‘half’,n:‘bad’};
+pts+=gains[grade]; save(); updH();
+const el=document.getElementById(‘sgr’);
+el.outerHTML=`<div class="qfb show ${cls[grade]}">${labels[grade]}</div>`;
+document.getElementById(‘qnxt’).classList.add(‘show’);
+}
+function answerMC(i){
+if(qAnswered)return; qAnswered=true;
+const q=activeQ[qIdx];
+document.querySelectorAll(’.qopt’).forEach(o=>o.disabled=true);
+document.querySelectorAll(’.qopt’)[q.c].classList.add(‘correct’);
+const fb=document.getElementById(‘qfb’);
+if(i===q.c){
+document.querySelectorAll(’.qopt’)[i].classList.add(‘correct’);
+fb.className=‘qfb show ok’; fb.innerHTML=‘✅ Richtig! ‘+q.exp;
+pts+=10; save(); updH();
+} else {
+document.querySelectorAll(’.qopt’)[i].classList.add(‘wrong’);
+fb.className=‘qfb show bad’; fb.innerHTML=’❌ Falsch. ’+q.exp;
+}
+document.getElementById(‘qnxt’).classList.add(‘show’);
+}
+function nextQ(){ qIdx++; renderQ(); }
+function backSetup(){
+document.getElementById(‘qsetup’).style.display=‘block’;
+document.getElementById(‘qrun’).style.display=‘none’;
+renderSetup();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AUFSATZ
+// ═══════════════════════════════════════════════════════════════════
+function renderAufsatz(){
+document.getElementById(‘aufsatzTab’).innerHTML=` <div class="card up"><div class="card-head">✍️ Fachaufsatz – Struktur FOS 12 Bayern</div> <p style="font-size:.82rem;color:var(--muted)">Gilt für alle PP-Themen Kl. 11 + 12. Immer mit Fallbeispiel!</p></div> ${[ ['1','Einleitung','Thema vorstellen · Fallbeispiel kurz aufgreifen · Relevanz für Sozialbereich · Kernbegriff(e) ankündigen'], ['2a','Theorie erklären','Fachbegriff präzise definieren · Theoretiker mit vollem Namen + ggf. Jahr · Kernaussage in eigenen Worten · Modell/Schema erläutern'], ['2b','Auf Fallbeispiel anwenden','Theorie konkret am Fall zeigen · Fachbegriffe aus Theorie nutzen · zeigen dass du VERSTEHST (nicht nur wiederholen)'], ['2c','Kritische Würdigung','Stärken der Theorie · Schwächen/Grenzen · ggf. Vergleich mit anderer Theorie · eigene begründete Einschätzung'], ['3','Schluss/Fazit','Kernaussagen bündeln · Bedeutung für Soziale Arbeit/Pädagogik herausstellen · eigene Meinung begründet äußern'] ].map(([n,h,p])=>`<div class="astep"><div class="asnum">${n}</div><div class="asbody"><h4>${h}</h4><p>${p}</p></div></div>`).join('')} <div class="card up" style="margin-top:6px"> <div class="card-head" style="font-size:.95rem">💡 Häufige Verbindungen im Abi</div> <table class="tbl"><tr><th>Hauptthema</th><th>Unbedingt auch erwähnen</th></tr> <tr><td>Freud</td><td>Topografisches Modell + Instanzen + Abwehr (Verdrängung, Projektion, Fixierung, Regression, Identifikation) + Kritik</td></tr> <tr><td>Bandura (Lerntheorie)</td><td>4 Prozesse + Bobo-Doll + Selbstwirksamkeit + Selbstregulation</td></tr> <tr><td>Rogers</td><td>Aktualisierungstendenz + Real-/Idealselbst + Kongruenz + Bedingte Wertschätzung + 3 Grundhaltungen</td></tr> <tr><td>Marcia / Identität</td><td>Alle 4 Status + Krise + Commitment + Erikson als Grundlage + Beispielbereich nennen</td></tr> <tr><td>Watzlawick</td><td>Alle 5 Axiome + Kommunikationsstörungen + gelungene Kommunikation</td></tr> <tr><td>Life Model</td><td>Alle 8 Begriffe (Ökologie, Transaktion, Anpassung, Habitat, Nische, Lebens-Stress, Coping, Ressourcen)</td></tr> <tr><td>Resilienz</td><td>Vulnerabilität + 4 Schutzfaktoren laut Lehrplan + Kauai-Studie</td></tr> <tr><td>Erziehungsstile</td><td>Tausch/Tausch (nicht Baumrind!) + alle 3 Stile + Wirkungen</td></tr> <tr><td>Motivation</td><td>Rubikon-Modell (5 Phasen!) + intrinsisch/extrinsisch + Korrumpierungseffekt</td></tr> <tr><td>Lebenswelt (Thiersch)</td><td>5 Dimensionen + alle 6 Handlungsmaximen</td></tr> </table> <div class="slabel" style="margin-top:10px">Prüfungs-Tipps</div> <ul style="font-size:.82rem;padding-left:16px;line-height:1.6"> <li>Fachbegriffe <strong>definieren bevor verwenden</strong></li> <li>Theoretiker mit <strong>vollem Namen</strong> (z.B. Paul Watzlawick, Carl Rogers)</li> <li><strong>Kein Aufzählungsstil</strong> – Fließtext in ganzen Sätzen</li> <li><strong>Praxisbezug</strong> immer auf Sozialbereich beziehen (Kita, Heim, Beratung)</li> <li>FOS 12: Je Aufgabe 1× Klasse 11 + 1× Klasse 12 + 1× beliebig</li> </ul> </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════════════════
+function showTab(tab,idx){
+[‘lernenTab’,‘quizTab’,‘aufsatzTab’].forEach(id=>document.getElementById(id).style.display=‘none’);
+document.getElementById(tab+‘Tab’).style.display=‘block’;
+document.querySelectorAll(’.tb’).forEach((t,i)=>t.classList.toggle(‘active’,i===idx));
+document.querySelectorAll(’.nbtn’).forEach((b,i)=>b.classList.toggle(‘active’,i===idx));
+if(tab===‘lernen’){closeTopic();}
+if(tab===‘quiz’){renderSetup();document.getElementById(‘qrun’).style.display=‘none’;}
+window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+renderList(); updH(); renderSetup(); renderAufsatz();
+</script>
+
+</body>
+</html>
