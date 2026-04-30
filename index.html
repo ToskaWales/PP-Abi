@@ -1152,8 +1152,6 @@ function renderQ(){
       <div class="qtag c${t.cls}">📘 Klasse ${t.cls} · ${t.title}</div>
       <div class="qtext">Definiere / erkläre: <strong>${q.term}</strong></div>
       <textarea class="qinput" id="qin" placeholder="Schreib deine Erklärung hier…"></textarea>
-
-```
   <button class="qsubmit" onclick="submitDef()">Musterlösung anzeigen</button>
   <div class="qreveal" id="qrev"><strong>Musterlösung:</strong><br>${q.ans}</div>
   <div class="selfgrade" id="sgr">
@@ -1162,7 +1160,6 @@ function renderQ(){
     <button class="sgbtn n" onclick="sg('n')">❌ Noch nicht (0)</button>
   </div>
   <button class="qnext" id="qnxt" onclick="nextQ()">Weiter →</button>`;
-```
 
 } else {
 card.innerHTML=` <div class="qtag c${t.cls}">📘 Klasse ${t.cls} · ${t.title}</div> <div class="qtext">${q.q}</div> <div class="qopts">${q.opts.map((o,i)=>`<button class="qopt" onclick="answerMC(${i})">${o}</button>`).join('')}</div> <div class="qfb" id="qfb"></div> <button class="qnext" id="qnxt" onclick="nextQ()">Weiter →</button>`;
